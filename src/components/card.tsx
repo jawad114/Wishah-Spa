@@ -12,7 +12,7 @@ type CardProps = {
 const Card = ({ title, price, change, lastMonth }: CardProps) => {
     const percentage = change ? Math.abs(change) : 0; 
     const color =change > 40 ? 'green' :change < 0 ? 'red' :  (change > 0 && change < 40 ? '#F05F97' : 'green');
-    const textColor = change > 40 ? 'text-green-600' :change < 0 ? 'text-red-600' :  (change > 0 && change < 40 ? 'text-pink-700' : 'green');
+    const textColor = change > 40 ? 'text-green-500' :change < 0 ? 'text-red-500' :  (change > 0 && change < 40 ? 'text-pink-500' : 'green');
     const remainingPercentage = 100 - percentage; // Calculate remaining percentage for gray line
 
     return (
@@ -20,8 +20,8 @@ const Card = ({ title, price, change, lastMonth }: CardProps) => {
             <div className="p-2">
                 <h3 className="text-black font-bold text-sm">{title}</h3>
                 <div className="flex items-center">
-                    <span className={`text-3xl ${textColor}`}>$</span>
-                    <span className={`text-3xl ml-1 ${textColor}`}>
+                    <span className={`text-3xl font-extrabold ${textColor}`}>$</span>
+                    <span className={`text-3xl ml-1 font-extrabold ${textColor}`}>
                         {price}
                     </span>
                 </div>

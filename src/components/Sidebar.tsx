@@ -1,7 +1,7 @@
 'use client'; 
 
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, Settings, Users,  LucideLogOut, LogOut, DoorOpen, Bath, Book, CalendarCheckIcon, ListCheck, BookCheck } from 'lucide-react'; 
+import { LayoutDashboard, Settings, Users,  LucideLogOut, LogOut, DoorOpen, Bath, Book, CalendarCheckIcon, ListCheck, BookCheck, HandPlatter } from 'lucide-react'; 
 import Link from 'next/link';
 
 const Sidebar = () => {
@@ -96,7 +96,7 @@ const Sidebar = () => {
           )}
         </Link>
 
-        <Link href="/bookings" className="relative flex flex-col items-start w-full px-2">
+        {/* <Link href="/bookings" className="relative flex flex-col items-start w-full px-2">
           <div className="flex items-center space-x-2 ">
             <BookCheck
               className={`w-6 h-6 ${isActive('/bookings') ? 'text-green-500' : 'text-green-500'}`}
@@ -106,6 +106,20 @@ const Sidebar = () => {
             </span>
           </div>
           {isActive('/bookings') && (
+            <span className="absolute w-5 ml-8 h-0.5 bottom-0 bg-green-500 rounded-t-md mt-2"></span>
+          )}
+        </Link> */}
+
+        <Link href="/products" className="relative flex flex-col items-start w-full px-2">
+          <div className="flex items-center space-x-2 ">
+            <HandPlatter
+              className={`w-6 h-6 ${isActive('/products') ? 'text-green-500' : 'text-green-500'}`}
+            />
+            <span className={`text-lg font-bold ${isActive('/products') ? 'text-pink-500' : 'text-black'}`}>
+            Products
+            </span>
+          </div>
+          {isActive('/products') && (
             <span className="absolute w-5 ml-8 h-0.5 bottom-0 bg-green-500 rounded-t-md mt-2"></span>
           )}
         </Link>

@@ -4,7 +4,7 @@ import { ClipboardPenLine, FilePenLine, Trash2 } from 'lucide-react';
 import Sidebar from './../../../components/Sidebar';
 import Header from './../../../components/header';
 import SearchComponent from './../../../components/searchComponent';
-import ServiceFormModal from './../../../components/StaffInfoModal';
+import StaffCardModal from './../../../components/ProductsForm'; // Update this line to match the correct import
 import SavingCard from './../../../components/SavingCard';
 import DeleteConfirmationCard from './../../../components/DeleteConfirmationCard';
 import { toast } from 'react-toastify';
@@ -14,9 +14,8 @@ import 'react-toastify/dist/ReactToastify.css';
 interface StaffMember {
   id: number;
   name: string;
-  email: string;
-  phone: string;
-  designation: string;
+  description: string;
+  price: string;
   imageUrl: string;
 }
 
@@ -32,8 +31,8 @@ function Staff() {
   // Sample data - replace with API call in real implementation
   const fetchStaffMembers = () => {
     const data: StaffMember[] = [
-      { id: 1, name: 'John Doe', email: 'john@example.com', phone: '123-456-7890', designation: 'Manager', imageUrl: '/profile.png' },
-      { id: 2, name: 'Jane Smith', email: 'jane@example.com', phone: '987-654-3210', designation: 'Therapist', imageUrl: '/Ellipse9.png' },
+      { id: 1, name: 'John Doe', description: 'Experienced Manager', price: '$5000', imageUrl: '/product.png' },
+      { id: 2, name: 'Jane Smith', description: 'Certified Therapist', price: '$3000', imageUrl: '/product1.png' },
       // Add more staff members here
     ];
     setStaffMembers(data);
@@ -55,28 +54,34 @@ function Staff() {
     setIsEditing(false); // Ensure form is in "create" mode
   };
 
-  const handleSave = (newStaff: StaffMember) => {
+  const handleSave = (name: string, price: string, description: string, image: File | null) => {
     setIsSaving(true);
+
+    // Create a new staff member object
+    const newStaff: StaffMember = {
+      id: staffMembers.length + 1, // Increment ID based on existing staff
+      name,
+      price,
+      description,
+      imageUrl: image ? URL.createObjectURL(image) : '/default-image.png', // Handle image upload
+    };
 
     setTimeout(() => {
       if (isEditing && currentStaff) {
         // Update the existing staff member
         setStaffMembers((prev) =>
-          prev.map((staff) =>
-            staff.id === currentStaff.id ? newStaff : staff
-          )
+          prev.map((staff) => (staff.id === currentStaff.id ? newStaff : staff))
         );
         toast.success('Staff member updated successfully!');
       } else {
         // Add new staff member
-        setStaffMembers((prev) => [...prev, newStaff]); // No need to assign a new ID, it's already in the form data
+        setStaffMembers((prev) => [...prev, newStaff]);
         toast.success('Staff member added successfully!');
       }
       setIsSaving(false);
       setShowForm(false);
     }, 2000);
-};
-
+  };
 
   const handleDelete = (index: number) => {
     setStaffToDelete(index);
@@ -104,7 +109,7 @@ function Staff() {
       <Sidebar />
 
       <div className="flex justify-between items-center p-4 ml-64">
-        <h1 className="text-2xl font-bold ml-8">Staff Information</h1>
+        <h1 className="text-2xl font-bold ml-8">Products Information</h1>
         <button
           onClick={handleCreate}
           className="flex items-center bg-green-500 text-white py-2 px-4 mr-16 mt-3 rounded"
@@ -137,23 +142,21 @@ function Staff() {
           <div className="flex justify-between items-center py-2 border-b mb-2 ml-20">
             <span className="text-lg font-bold text-black w-1/12">Image</span>
             <span className="text-lg font-bold text-black w-3/12">Name</span>
-            <span className="text-lg font-bold text-black w-3/12">Email</span>
-            <span className="text-lg font-bold text-black w-2/12">Phone Number</span>
-            <span className="text-lg font-bold text-black w-2/12">Designation</span>
+            <span className="text-lg font-bold text-black w-3/12">Description</span>
+            <span className="text-lg font-bold text-black mr-8 w-2/12">Price</span>
             <span className="text-lg font-bold text-black w-1/12">Options</span>
           </div>
 
           {/* Staff Rows */}
           {staffMembers.map((staff, index) => (
-            <div key={staff.id} className="flex items-center py-2 border-b mb-4 ml-20">
+            <div key={staff.id} className="flex justify-between items-center py-2 border-b mb-4 ml-20">
               <div className="w-1/12">
                 <img src={staff.imageUrl} alt={staff.name} className="rounded-full w-12 h-12" />
               </div>
               <span className="text-sm text-black w-3/12">{staff.name}</span>
-              <span className="text-sm text-black w-3/12">{staff.email}</span>
-              <span className="text-sm text-black w-2/12">{staff.phone}</span>
-              <span className="text-sm text-black w-2/12">{staff.designation}</span>
-              <div className="flex gap-3 w-1/9 justify-end">
+              <span className="text-sm text-black w-3/12">{staff.description}</span>
+              <span className="text-sm text-black w-2/12">{staff.price}</span>
+              <div className="flex gap-3 mr-8 w-1/12 justify-end">
                 <FilePenLine
                   onClick={() => handleEdit(index)}
                   className="cursor-pointer text-green-500 hover:text-pink-400"
@@ -166,11 +169,10 @@ function Staff() {
             </div>
           ))}
         </div>
-
       </div>
 
       {showForm && (
-        <ServiceFormModal
+        <StaffCardModal // Updated modal name
           isOpen={showForm}
           onClose={() => setShowForm(false)}
           onSave={handleSave}
