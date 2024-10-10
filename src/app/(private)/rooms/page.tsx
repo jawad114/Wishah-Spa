@@ -20,6 +20,13 @@ interface Room {
   isThirdParty: number;
   amenities: { name: string }[];
 }
+interface AddRoomModalProps {
+  onSave: (room: Room) => Promise<void>; // Ensure this matches the Room type
+  currentRoom?: Room | null; // This may need to align with the Room type
+  isEditing: boolean;
+  onClose: () => void;
+}
+
 
 const Rooms: React.FC = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -189,7 +196,9 @@ const Rooms: React.FC = () => {
         <RoomFormModal
           onClose={() => setShowForm(false)}
           onSave={handleSave}
-          currentRoom={currentRoom} 
+          currentRoom={currentRoom}
+          isEditing={isEditing}
+           
         />
       )}
 
@@ -199,6 +208,7 @@ const Rooms: React.FC = () => {
         <DeleteConfirmationCard
           onDelete={confirmDelete}
           onCancel={cancelDelete}
+          onConfirm={confirmDelete}
         />
       )}
     </div>

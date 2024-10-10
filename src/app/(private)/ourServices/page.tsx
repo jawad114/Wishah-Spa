@@ -207,6 +207,7 @@ function OurServices() {
         <DeleteConfirmationCard
           onDelete={confirmDelete}
           onCancel={cancelDelete}
+          onConfirm={confirmDelete}
         />
       )}
     </div>

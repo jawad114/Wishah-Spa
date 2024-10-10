@@ -1,11 +1,12 @@
-
+import { promises } from 'dns';
 import React from 'react';
 
 type DeleteConfirmationCardProps = {
   
     onCancel: () => void;
+    onDelete?: () =>  void; 
     onConfirm: () => Promise<void>
-    onDelete?: () => Promise<void> | void; 
+
   
 }
 const DeleteConfirmationCard = ({ onDelete, onCancel }: DeleteConfirmationCardProps) => {

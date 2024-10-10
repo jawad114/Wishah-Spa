@@ -174,11 +174,13 @@ function Amenities() {
         {isSaving && <SavingCard />}
 
         {showDeleteConfirm && (
-          <DeleteConfirmationCard
-            onDelete={confirmDelete}
-            onCancel={cancelDelete}
-          />
-        )}
+        <DeleteConfirmationCard
+          onDelete={confirmDelete}
+          onCancel={cancelDelete}
+          onConfirm={confirmDelete} // Pass the confirmDelete function to onConfirm
+        />
+      )}
+
 
         <ToastContainer />
       </div>

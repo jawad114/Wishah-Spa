@@ -221,6 +221,7 @@ function Staff() {
         <DeleteConfirmationCard
           onDelete={confirmDelete}
           onCancel={cancelDelete}
+          onConfirm={confirmDelete}
         />
       )}
     </div>

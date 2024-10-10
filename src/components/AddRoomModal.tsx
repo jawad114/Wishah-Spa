@@ -45,7 +45,7 @@ const AddRoomModal: React.FC<AddRoomModalProps> = ({ onClose, onSave, currentAme
     if (currentAmenity) {
       setRoomName(currentAmenity.name);
       setSelectedAmenity(currentAmenity.id);
-      setThirdPartyRoom(currentAmenity.thirdPartyRoom === 'Yes');
+      // setThirdPartyRoom(currentAmenity.thirdPartyRoom === 'Yes');
     } else {
       setRoomName('');
       setSelectedAmenity(null);
