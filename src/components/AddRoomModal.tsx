@@ -1,11 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 
+interface Amenity {
+  id: number;
+  name: string;
+}
+
+interface Room {
+  name: string;
+  amenityId: number;
+  thirdPartyRoom: 'Yes' | 'No';
+}
+
 type AddRoomModalProps = {
   onClose: () => void;
-  onSave: (room: any) => void;
-  currentAmenity: any;
+  onSave: (room: Room) => void; // Update to use Room type
+  currentAmenity: Amenity | null; // Update to use Amenity type
 }
+
 
 const AddRoomModal: React.FC<AddRoomModalProps> = ({ onClose, onSave, currentAmenity }) => {
   const [name, setRoomName] = useState('');

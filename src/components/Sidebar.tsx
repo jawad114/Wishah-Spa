@@ -1,7 +1,7 @@
 'use client'; 
 
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, Settings, Users,  LucideLogOut, LogOut, DoorOpen, Bath, Book, CalendarCheckIcon, ListCheck, BookCheck, HandPlatter } from 'lucide-react'; 
+import { LayoutDashboard, Settings, Users, LogOut, DoorOpen, Bath, HandPlatter } from 'lucide-react'; 
 import Link from 'next/link';
 
 const Sidebar = () => {

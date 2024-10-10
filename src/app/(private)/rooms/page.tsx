@@ -1,7 +1,7 @@
 'use client';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import { ClipboardPenLine, DoorOpen, FilePenLine, Trash2 } from 'lucide-react';
+import { ClipboardPenLine, FilePenLine, Trash2 } from 'lucide-react';
 import Sidebar from './../../../components/Sidebar';
 import Header from './../../../components/header';
 import SearchComponent from './../../../components/searchComponent';

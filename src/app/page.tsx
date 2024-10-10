@@ -3,14 +3,14 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
-import { Button } from "@/components/ui/button";
+
+
 
 export default function ModeToggle() {
-  const { setTheme } = useTheme();
+
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false); 
+  const [loggedIn] = useState(false); 
 
   useEffect(() => {
     setMounted(true);
