@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { ArrowsUpFromLine, Edit2, FilePenLine, Trash2 } from 'lucide-react';
+import {FilePenLine, Trash2 } from 'lucide-react';
 import Sidebar from './../../../components/Sidebar';
 import Header from './../../../components/header';
 import SearchComponent from './../../../components/searchComponent';
@@ -21,7 +21,7 @@ function Amenities() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [amenityToDelete, setAmenityToDelete] = useState(null);
 
-  // Fetch amenities when the component mounts
+
   useEffect(() => {
     const fetchAmenities = async () => {
       try {

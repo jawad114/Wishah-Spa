@@ -1,14 +1,14 @@
 'use client'; 
 import React, { useState } from "react";
-import { redirect, useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
+import {useRouter } from "next/navigation";
+
 import { Button } from "@/components/ui/button";
 import { Toaster, toast } from "react-hot-toast";
 import axios from "axios";  // Import Axios
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
-  const { theme, setTheme } = useTheme();
+
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
