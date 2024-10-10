@@ -12,6 +12,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import privateRoute from '../../../components/PrivateRoute';
 
+
 function Amenities() {
   const [amenities, setAmenities] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
@@ -29,13 +30,14 @@ function Amenities() {
         setAmenities(response.data);
       } catch (error) {
         toast.error('Error fetching amenities');
+        console.log(error);
       }
     };
     fetchAmenities();
   }, []);
 
   // Handlers
-  const handleEdit = (index) => {
+  const handleEdit = (index:number) => {
     setCurrentAmenity(amenities[index]);
     setIsEditing(true);
     setShowForm(true);
@@ -47,7 +49,7 @@ function Amenities() {
     setShowForm(true);
   };
 
-  const handleSave = async (newAmenity) => {
+  const handleSave = async (newAmenity: string) => {
     setIsSaving(true);
     setShowForm(false);
     try {
@@ -67,6 +69,7 @@ function Amenities() {
       }
     } catch (error) {
       toast.error('Error saving amenity');
+      console.log(error);
     } finally {
       setIsSaving(false);
       setShowForm(false);
@@ -87,6 +90,7 @@ function Amenities() {
         setAmenities(updatedAmenities);
         toast.success('Amenity deleted successfully!');
       } catch (error) {
+        console.log(error);
         toast.error('Error deleting amenity');
       }
     }
