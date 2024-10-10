@@ -23,7 +23,7 @@ const OnBoarding = () => {
       <div className="relative z-10 text-center text-white">
         <img src="/wishahLogo.png" alt="Logo" className="max-w-xs mx-auto mb-6" />
         <h1 className="text-4xl font-bold mb-4">About Wishah Appointment Booking & Schedules</h1>
-        <p className="text-lg mb-6">Wishah SPA booking is one of the best spa, salon and any kinds of Therapist's appointment and schedules booking application <br /> with integrated CMS website. Using this system admin can Customize Service time slot, Daily/Weekly/Monthly Booking <br /> & cancelation limitation, Employee wise service and service price.</p>
+        <p className="text-lg mb-6">Wishah SPA booking is one of the best spa, salon and any kinds of Therapists appointment and schedules booking application <br /> with integrated CMS website. Using this system admin can Customize Service time slot, Daily/Weekly/Monthly Booking <br /> & cancelation limitation, Employee wise service and service price.</p>
         <button onClick={handleGetStarted} className="flex flex-col-2 px-6 gap-3 py-1 ml-96 mt-14 text-lg font-semibold text-white bg-green-600 rounded hover:bg-pinkCustom transition">
           Get Started  <MoveRight className='mt-1' />
         </button>
