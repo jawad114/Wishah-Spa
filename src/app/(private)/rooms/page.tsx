@@ -13,19 +13,15 @@ import 'react-toastify/dist/ReactToastify.css';
 import privateRoute from './../../../components/PrivateRoute';
 
 // Define types for Room and component state
+// Define a unified Room interface
 interface Room {
-  _id: string;
-  id: string;
+  _id: string; // Include _id for MongoDB documents
+  id: string; // This could be the same as _id
   name: string;
-  isThirdParty: number;
-  amenities: { name: string }[];
+  isThirdParty: number; // Change type as per your requirements
+  amenities: { name: string }[]; // Assuming amenities are still needed
 }
-interface AddRoomModalProps {
-  onSave: (room: Room) => Promise<void>; // Ensure this matches the Room type
-  currentRoom?: Room | null; // This may need to align with the Room type
-  isEditing: boolean;
-  onClose: () => void;
-}
+
 
 
 const Rooms: React.FC = () => {
@@ -67,10 +63,10 @@ const Rooms: React.FC = () => {
     try {
       const roomData = {
         name: newRoom.name,
-        isThirdParty: newRoom.isThirdParty ? 1 : 0,
-        amenities: Array.isArray(newRoom.amenities) ? newRoom.amenities : [newRoom.amenities]
+        isThirdParty: newRoom.isThirdParty, // Ensure this matches the new type
+        amenities: Array.isArray(newRoom.amenities) ? newRoom.amenities : [newRoom.amenities],
       };
-
+  
       if (isEditing && currentRoom) {
         // Update existing room
         const response = await axios.put<Room>(`http://localhost:4000/rooms/${currentRoom.id}`, roomData);
@@ -93,7 +89,7 @@ const Rooms: React.FC = () => {
       setShowForm(false);
     }
   };
-
+  
   const handleDelete = (index: number) => {
     setRoomToDelete(index);
     setShowDeleteConfirm(true);
@@ -192,7 +188,7 @@ const Rooms: React.FC = () => {
         </div>
       </div>
 
-      {showForm && (
+      {/* {showForm && (
         <RoomFormModal
           onClose={() => setShowForm(false)}
           onSave={handleSave}
@@ -200,7 +196,7 @@ const Rooms: React.FC = () => {
           isEditing={isEditing}
            
         />
-      )}
+      )} */}
 
       {isSaving && <SavingCard />}
 
