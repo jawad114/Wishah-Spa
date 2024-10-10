@@ -1,8 +1,12 @@
+
 import React from 'react';
 
 type DeleteConfirmationCardProps = {
-    onDelete: () => void;
+  
     onCancel: () => void;
+    onConfirm: () => Promise<void>
+    onDelete?: () => Promise<void> | void; 
+  
 }
 const DeleteConfirmationCard = ({ onDelete, onCancel }: DeleteConfirmationCardProps) => {
   return (

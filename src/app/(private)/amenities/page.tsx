@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import {FilePenLine, Trash2 } from 'lucide-react';
+import { FilePenLine, Trash2 } from 'lucide-react';
 import Sidebar from './../../../components/Sidebar';
 import Header from './../../../components/header';
 import SearchComponent from './../../../components/searchComponent';
@@ -12,16 +12,19 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import privateRoute from '../../../components/PrivateRoute';
 
+type Amenity = {
+  id: number; // Use the correct type based on your API response
+  name: string;
+};
 
 function Amenities() {
-  const [amenities, setAmenities] = useState([]);
+  const [amenities, setAmenities] = useState<Amenity[]>([]);
   const [isEditing, setIsEditing] = useState(false);
-  const [currentAmenity, setCurrentAmenity] = useState(null);
+  const [currentAmenity, setCurrentAmenity] = useState<Amenity | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [amenityToDelete, setAmenityToDelete] = useState(null);
-
+  const [amenityToDelete, setAmenityToDelete] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchAmenities = async () => {
@@ -37,7 +40,7 @@ function Amenities() {
   }, []);
 
   // Handlers
-  const handleEdit = (index:number) => {
+  const handleEdit = (index: number) => {
     setCurrentAmenity(amenities[index]);
     setIsEditing(true);
     setShowForm(true);
@@ -57,7 +60,7 @@ function Amenities() {
         // Update existing amenity
         await axios.put(`http://localhost:4000/amenities/${currentAmenity.id}`, { name: newAmenity });
         const updatedAmenities = amenities.map((amenity) =>
-          amenity.id === currentAmenity.id ? { ...amenity, name: newAmenity } : amenity
+          amenity && amenity.id === currentAmenity.id ? { ...amenity, name: newAmenity } : amenity
         );
         setAmenities(updatedAmenities);
         toast.success('Amenity updated successfully!');
@@ -76,7 +79,7 @@ function Amenities() {
     }
   };
 
-  const handleDelete = (index) => {
+  const handleDelete = (index: number) => {
     setAmenityToDelete(index);
     setShowDeleteConfirm(true);
   };
@@ -139,11 +142,10 @@ function Amenities() {
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold ml-20 text-black">Amenities</h2>
-          <span className="text-lg font-bold text-black mr-20">Options</span>
+          <span className="mr-20 text-black font-bold">Options</span>
         </div>
-
-        <div className="flex flex-col">
-          {amenities.map((amenity, index) => (
+        <div className="relative flex flex-col">
+          {amenities.map((amenity: Amenity, index: number) => (
             <div key={index} className="relative flex justify-between items-center py-2">
               <span className="ml-20 text-sm font-bold text-black">{amenity.name}</span>
               <div className="flex gap-3 mr-20">
@@ -160,26 +162,26 @@ function Amenities() {
             </div>
           ))}
         </div>
+
+        {showForm && (
+          <AmenitiesFormCard
+            onClose={() => setShowForm(false)}
+            onSave={handleSave}
+            currentAmenity={currentAmenity}
+          />
+        )}
+
+        {isSaving && <SavingCard />}
+
+        {showDeleteConfirm && (
+          <DeleteConfirmationCard
+            onDelete={confirmDelete}
+            onCancel={cancelDelete}
+          />
+        )}
+
+        <ToastContainer />
       </div>
-
-      {showForm && (
-        <AmenitiesFormCard
-          onClose={() => setShowForm(false)}
-          onSave={handleSave}
-          currentAmenity={currentAmenity}
-        />
-      )}
-
-      {isSaving && <SavingCard />}
-
-      {showDeleteConfirm && (
-        <DeleteConfirmationCard
-          onDelete={confirmDelete}
-          onCancel={cancelDelete}
-        />
-      )}
-
-      <ToastContainer />
     </div>
   );
 }

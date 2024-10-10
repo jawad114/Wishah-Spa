@@ -187,7 +187,7 @@ function Staff() {
               </div>
               <span className="text-sm text-black w-3/12">{staff.name}</span>
               <span className="text-sm text-black w-3/12">{staff.email}</span>
-              <span className="text-sm text-black w-2/12">{staff.phoneNumber}</span>
+              <span className="text-sm text-black w-2/12">{staff.phone}</span>
               <span className="text-sm text-black w-2/12">{staff.designation}</span>
               <div className="flex gap-3 w-1/9 justify-end">
                 <FilePenLine

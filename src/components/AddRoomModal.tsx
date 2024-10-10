@@ -14,17 +14,16 @@ interface Room {
 
 type AddRoomModalProps = {
   onClose: () => void;
-  onSave: (room: Room) => void; // Update to use Room type
+  onSave: (room: Room) => Promise<void>; // Update to use Room type
   currentAmenity: Amenity | null; // Update to use Amenity type
 }
 
-
 const AddRoomModal: React.FC<AddRoomModalProps> = ({ onClose, onSave, currentAmenity }) => {
-  const [name, setRoomName] = useState('');
-  const [amenities, setAmenities] = useState<any[]>([]);
+  const [name, setRoomName] = useState<string>('');
+  const [amenities, setAmenities] = useState<Amenity[]>([]); // Type amenities as Amenity[]
   const [selectedAmenity, setSelectedAmenity] = useState<number | null>(null);
-  const [thirdPartyRoom, setThirdPartyRoom] = useState(false);
-  const [warning, setWarning] = useState('');
+  const [thirdPartyRoom, setThirdPartyRoom] = useState<boolean>(false); // Explicitly typing as boolean
+  const [warning, setWarning] = useState<string>('');
 
   // Fetch amenities from the API
   useEffect(() => {
@@ -54,19 +53,19 @@ const AddRoomModal: React.FC<AddRoomModalProps> = ({ onClose, onSave, currentAme
     }
   }, [currentAmenity]);
 
-  const handleSave = () => {
+  const handleSave = async () => { // Make this function async
     if (!name || selectedAmenity === null) {
       setWarning('All fields are required');
       return;
     }
 
-    const newRoom = {
+    const newRoom: Room = { // Explicitly type newRoom
       name,
       amenityId: selectedAmenity,
-      thirdPartyRoom: thirdPartyRoom ? 'Yes' : 'No'
+      thirdPartyRoom: thirdPartyRoom ? 'Yes' : 'No',
     };
 
-    onSave(newRoom);
+    await onSave(newRoom); // Await the onSave function
     onClose();
   };
 

@@ -12,20 +12,30 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import privateRoute from '../../../components/PrivateRoute';
 
+// Define the structure for an amenity/service
+interface Amenity {
+  _id: string;
+  serviceName: string;
+  servicePrice: number; // Adjust type if service price can be a string
+  requiredTherapist: number; // Adjust type if needed
+  amenities: Array<{ name: string }>;
+  duration?: string; // Optional property
+}
+
 function OurServices() {
-  const [amenities, setAmenities] = useState([]);
-  const [isEditing, setIsEditing] = useState(false);
-  const [currentAmenity, setCurrentAmenity] = useState(null);
-  const [showForm, setShowForm] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [amenityToDelete, setAmenityToDelete] = useState(null);
+  const [amenities, setAmenities] = useState<Amenity[]>([]);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [currentAmenity, setCurrentAmenity] = useState<Amenity | null>(null);
+  const [showForm, setShowForm] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<boolean>(false);
+  const [amenityToDelete, setAmenityToDelete] = useState<number | null>(null);
 
   // Fetch amenities on component mount
   useEffect(() => {
     const fetchAmenities = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/services/');
+        const response = await axios.get<Amenity[]>('http://localhost:4000/services/');
         console.log(response.data);
         setAmenities(response.data);
       } catch (error) {
@@ -36,7 +46,7 @@ function OurServices() {
   }, []);
 
   // Handlers
-  const handleEdit = (index) => {
+  const handleEdit = (index: number) => {
     setCurrentAmenity(amenities[index]);
     setIsEditing(true);
     setShowForm(true);
@@ -48,10 +58,10 @@ function OurServices() {
     setShowForm(true); // Show modal when creating a new service
   };
 
-  const handleSave = async (newService) => {
+  const handleSave = async (newService: Omit<Amenity, '_id'>) => {
     setIsSaving(true); // Show the saving card
     try {
-      const serviceData = {
+      const serviceData: Omit<Amenity, '_id'> = {
         serviceName: newService.serviceName,
         servicePrice: newService.servicePrice,
         requiredTherapist: newService.requiredTherapist,
@@ -59,9 +69,9 @@ function OurServices() {
         duration: newService.duration,
       };
 
-      if (isEditing) {
+      if (isEditing && currentAmenity) {
         // Update existing service
-        const response = await axios.put(`http://localhost:4000/services/${currentAmenity.id}`, serviceData);
+        const response = await axios.put<Amenity>(`http://localhost:4000/services/${currentAmenity._id}`, serviceData);
         const updatedAmenities = amenities.map((amenity) =>
           amenity._id === currentAmenity._id ? response.data : amenity
         );
@@ -69,7 +79,7 @@ function OurServices() {
         toast.success('Service updated successfully!');
       } else {
         // Create new service
-        const response = await axios.post('http://localhost:4000/services/create', serviceData);
+        const response = await axios.post<Amenity>('http://localhost:4000/services/create', serviceData);
         setAmenities([...amenities, response.data]); // Add new service to the list
         toast.success('Service saved successfully!');
       }
@@ -82,7 +92,7 @@ function OurServices() {
     }
   };
 
-  const handleDelete = (index) => {
+  const handleDelete = (index: number) => {
     setAmenityToDelete(index);
     setShowDeleteConfirm(true);
   };
@@ -90,10 +100,7 @@ function OurServices() {
   const confirmDelete = async () => {
     if (amenityToDelete !== null) {
       try {
-          console.log("only id ",amenities[amenityToDelete].id);
-          console.log("amentiy wiht dee ",amenities[amenityToDelete])
-          console.log("only amenites ",amenities)
-        const response = await axios.delete(`http://localhost:4000/services/${amenities[amenityToDelete].id}`);
+        const response = await axios.delete(`http://localhost:4000/services/${amenities[amenityToDelete]._id}`);
         if (response.status === 200) {
           const updatedAmenities = amenities.filter((_, i) => i !== amenityToDelete);
           setAmenities(updatedAmenities);
@@ -101,7 +108,7 @@ function OurServices() {
         } else {
           toast.error('Failed to delete the service. Please try again.');
         }
-      } catch (error) {
+      } catch (error: any) {
         // Improved error handling
         const errorMessage = error.response?.data?.message || 'Error deleting service!'; // Adjust based on your API's response
         toast.error(errorMessage);
@@ -111,12 +118,11 @@ function OurServices() {
     setShowDeleteConfirm(false);
     setAmenityToDelete(null);
   };
-  
+
   const cancelDelete = () => {
     setShowDeleteConfirm(false);
     setAmenityToDelete(null);
   };
-  
 
   return (
     <div>
@@ -157,17 +163,17 @@ function OurServices() {
           {/* Header */}
           <div className="flex justify-between items-center py-2 border-b mb-2 ml-20">
             <span className="text-lg font-bold text-black w-1/4">Service Name</span>
-            <span className="text-lg font-bold text-black w-1/4 ml-10">Amenities</span>
-            <span className="text-lg font-bold text-black w-1/4 ml-8">Service Price</span>
+            <span className="text-lg font-bold text-black w-1/4 ml-16">Amenities</span>
+            <span className="text-lg font-bold text-black w-1/4 ml-28">Service Price</span>
             <span className="text-lg font-bold text-black w-1/4">Required Therapists</span>
-            <span className="text-lg font-bold text-black ml-80 w-1/5">Options</span>
+            <span className="text-lg font-bold text-black ml-80 w-1/7 mr-24">Options</span>
           </div>
 
           {/* Amenities Rows */}
           {amenities.map((amenity, index) => (
             <div key={index} className="flex justify-between items-center py-2 border-b mb-4">
               <span className="ml-20 text-sm text-black w-1/4">{amenity.serviceName}</span>
-              <span className="text-sm text-black w-1/4">
+              <span className="text-sm text-black w-1/4 mr-20">
                 {amenity.amenities.map((item) => item.name).join(', ')}
               </span>
               <span className="text-sm text-black w-1/4">{amenity.servicePrice}</span>
@@ -191,7 +197,7 @@ function OurServices() {
         <ServiceFormModal
           onClose={() => setShowForm(false)}
           onSave={handleSave}
-          currentAmenity={currentAmenity} 
+          // currentAmenity={currentAmenity} 
         />
       )}
 
