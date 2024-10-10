@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 
 type AmenitiesFormCardProps = {
     onClose: () => void;
     onSave: (amenityName: string) => void;
+    currentAmenity: any;
 }
-const AmenitiesFormCard = ({ onClose, onSave } : AmenitiesFormCardProps) => {
+const AmenitiesFormCard = ({ onClose, onSave, currentAmenity } : AmenitiesFormCardProps) => {
   const [amenityName, setAmenityName] = useState('');
   const [error, setError] = useState('');
-
+  useEffect(() => {
+    if (currentAmenity) {
+      setAmenityName(currentAmenity.amenityName); // Pre-fill with the current amenity name for editing
+    } else {
+      setAmenityName('');
+    }
+  }, [currentAmenity]);
   const handleSave = () => {
     if (!amenityName) {
       setError('Required Amenity name.');

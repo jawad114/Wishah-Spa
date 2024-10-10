@@ -1,5 +1,6 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios'; // Import axios
 import { ClipboardPenLine, FilePenLine, Trash2 } from 'lucide-react';
 import Sidebar from './../../../components/Sidebar';
 import Header from './../../../components/header';
@@ -9,21 +10,10 @@ import SavingCard from './../../../components/SavingCard';
 import DeleteConfirmationCard from './../../../components/DeleteConfirmationCard';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import privateRoute from '../../../components/PrivateRoute';
 
 function OurServices() {
-  const [amenities, setAmenities] = useState([
-    { name: 'Thai Massage', amenity: 'amenity1', price: 300.00, therapists: 1 },
-    { name: 'Four Hand Massage', amenity: 'amenity2', price: 200.00, therapists: 2 },
-    { name: 'Body Massage', amenity: 'amenity3', price: 800.00, therapists: 1 },
-    { name: 'Hot Oil Massage', amenity: 'amenity4', price: 300.00, therapists: 3 },
-    { name: 'Hot Stone Massage', amenity: 'amenity5', price: 200.00, therapists: 2 },
-    { name: 'Relaxation Massage', amenity: 'amenity6', price: 800.00, therapists: 1 },
-    { name: 'Russian Massage', amenity: 'amenity7', price: 300.00, therapists: 2 },
-    { name: 'Arabic Massage', amenity: 'amenity8', price: 200.00, therapists: 2 },
-    // { name: 'Moroccan Bath', amenity: 'amenity', price: 800.00, therapists: 1 },
-    // { name: 'Body Lotion Massage', amenity: 'amenity', price: 300.00, therapists: 1 },
-  ]);
-
+  const [amenities, setAmenities] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [currentAmenity, setCurrentAmenity] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -31,49 +21,102 @@ function OurServices() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [amenityToDelete, setAmenityToDelete] = useState(null);
 
-
-
+  // Fetch amenities on component mount
+  useEffect(() => {
+    const fetchAmenities = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/services/');
+        console.log(response.data);
+        setAmenities(response.data);
+      } catch (error) {
+        console.error('Error fetching amenities:', error);
+      }
+    };
+    fetchAmenities();
+  }, []);
 
   // Handlers
-  const handleEdit = (index: number) => {
+  const handleEdit = (index) => {
     setCurrentAmenity(amenities[index]);
     setIsEditing(true);
     setShowForm(true);
   };
 
   const handleCreate = () => {
+    setCurrentAmenity(null); // Reset current amenity for creating a new service
+    setIsEditing(false); // Not editing, so set this to false
     setShowForm(true); // Show modal when creating a new service
   };
 
-  const handleSave = (newService: any) => {
+  const handleSave = async (newService) => {
     setIsSaving(true); // Show the saving card
-    setTimeout(() => {
-      setAmenities([...amenities, newService]); // Add new service to the list
-      setIsSaving(false); // Hide the saving card after saving is done
-      toast.success('Service saved successfully!');
-    }, 2000); // Simulating a delay for the saving process (you can remove this in a real application)
-  };
-  
+    try {
+      const serviceData = {
+        serviceName: newService.serviceName,
+        servicePrice: newService.servicePrice,
+        requiredTherapist: newService.requiredTherapist,
+        amenities: newService.amenities,
+        duration: newService.duration,
+      };
 
-  const handleDelete = (index: any) => {
+      if (isEditing) {
+        // Update existing service
+        const response = await axios.put(`http://localhost:4000/services/${currentAmenity.id}`, serviceData);
+        const updatedAmenities = amenities.map((amenity) =>
+          amenity._id === currentAmenity._id ? response.data : amenity
+        );
+        setAmenities(updatedAmenities);
+        toast.success('Service updated successfully!');
+      } else {
+        // Create new service
+        const response = await axios.post('http://localhost:4000/services/create', serviceData);
+        setAmenities([...amenities, response.data]); // Add new service to the list
+        toast.success('Service saved successfully!');
+      }
+    } catch (error) {
+      toast.error('Error saving service!');
+      console.error('Error saving service:', error);
+    } finally {
+      setIsSaving(false); // Hide the saving card after saving is done
+      setShowForm(false); // Close the form modal after saving
+    }
+  };
+
+  const handleDelete = (index) => {
     setAmenityToDelete(index);
     setShowDeleteConfirm(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (amenityToDelete !== null) {
-      const updatedAmenities = amenities.filter((_, i) => i !== amenityToDelete);
-      setAmenities(updatedAmenities);
-      toast.success('Service deleted successfully!');
+      try {
+          console.log("only id ",amenities[amenityToDelete].id);
+          console.log("amentiy wiht dee ",amenities[amenityToDelete])
+          console.log("only amenites ",amenities)
+        const response = await axios.delete(`http://localhost:4000/services/${amenities[amenityToDelete].id}`);
+        if (response.status === 200) {
+          const updatedAmenities = amenities.filter((_, i) => i !== amenityToDelete);
+          setAmenities(updatedAmenities);
+          toast.success('Service deleted successfully!');
+        } else {
+          toast.error('Failed to delete the service. Please try again.');
+        }
+      } catch (error) {
+        // Improved error handling
+        const errorMessage = error.response?.data?.message || 'Error deleting service!'; // Adjust based on your API's response
+        toast.error(errorMessage);
+        console.error('Error deleting service:', error);
+      }
     }
     setShowDeleteConfirm(false);
     setAmenityToDelete(null);
   };
-
+  
   const cancelDelete = () => {
     setShowDeleteConfirm(false);
     setAmenityToDelete(null);
   };
+  
 
   return (
     <div>
@@ -86,7 +129,7 @@ function OurServices() {
           onClick={handleCreate}
           className="flex items-center bg-green-500 text-white py-2 px-4 mr-16 mt-3 rounded"
         >
-           <span className="mr-2"><ClipboardPenLine/> </span>Services
+          <span className="mr-2"><ClipboardPenLine /> </span>Services
         </button>
       </div>
 
@@ -110,46 +153,45 @@ function OurServices() {
         }}
         className="relative flex flex-col justify-start mb-40 rounded-lg"
       >
-  
+        <div className="flex flex-col">
+          {/* Header */}
+          <div className="flex justify-between items-center py-2 border-b mb-2 ml-20">
+            <span className="text-lg font-bold text-black w-1/4">Service Name</span>
+            <span className="text-lg font-bold text-black w-1/4 ml-10">Amenities</span>
+            <span className="text-lg font-bold text-black w-1/4 ml-8">Service Price</span>
+            <span className="text-lg font-bold text-black w-1/4">Required Therapists</span>
+            <span className="text-lg font-bold text-black ml-80 w-1/5">Options</span>
+          </div>
 
-  <div className="flex flex-col">
-  {/* Header */}
-  <div className="flex justify-between items-center py-2 border-b mb-2 ml-20">
-    <span className=" text-lg font-bold text-black w-1/4 ">Service Name</span>
-    <span className="text-lg font-bold text-black w-1/4 ml-10">Amenities</span>
-    <span className="text-lg font-bold text-black w-1/4 ml-8">Service Price</span>
-    <span className="text-lg font-bold text-black w-1/4 ">Required Therapists</span>
-    <span className="text-lg font-bold text-black ml-80 w-1/5 ">Options</span>
-  </div>
-
-  {/* Amenities Rows */}
-  {amenities.map((amenity, index) => (
-    <div key={index} className="flex justify-between items-center py-2 border-b mb-4"> {/* Added mb-4 for spacing */}
-      <span className="ml-20 text-sm  text-black w-1/4">{amenity.name}</span>
-      <span className="text-sm  text-black w-1/4">{amenity.amenity}</span>
-      <span className="text-sm  text-black w-1/4">{amenity.price}</span>
-      <span className="text-sm  text-black  w-1/4">{amenity.therapists}</span>
-      <div className="flex gap-3 w-1/5 justify-end mr-28">
-        <FilePenLine
-          onClick={() => handleEdit(index)}
-          className="cursor-pointer text-green-500 hover:text-pink-400"
-        />
-        <Trash2
-          onClick={() => handleDelete(index)}
-          className="cursor-pointer text-red-500 hover:text-red-700"
-        />
-      </div>
-    </div>
-  ))}
-</div>
-
-
+          {/* Amenities Rows */}
+          {amenities.map((amenity, index) => (
+            <div key={index} className="flex justify-between items-center py-2 border-b mb-4">
+              <span className="ml-20 text-sm text-black w-1/4">{amenity.serviceName}</span>
+              <span className="text-sm text-black w-1/4">
+                {amenity.amenities.map((item) => item.name).join(', ')}
+              </span>
+              <span className="text-sm text-black w-1/4">{amenity.servicePrice}</span>
+              <span className="text-sm text-black w-1/4">{amenity.requiredTherapist}</span>
+              <div className="flex gap-3 w-1/5 justify-end mr-28">
+                <FilePenLine
+                  onClick={() => handleEdit(index)}
+                  className="cursor-pointer text-green-500 hover:text-pink-400"
+                />
+                <Trash2
+                  onClick={() => handleDelete(index)}
+                  className="cursor-pointer text-red-500 hover:text-red-700"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {showForm && (
         <ServiceFormModal
           onClose={() => setShowForm(false)}
           onSave={handleSave}
+          currentAmenity={currentAmenity} 
         />
       )}
 
@@ -165,4 +207,4 @@ function OurServices() {
   );
 }
 
-export default OurServices;
+export default privateRoute(OurServices);

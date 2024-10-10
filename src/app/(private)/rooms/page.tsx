@@ -1,74 +1,117 @@
 'use client';
-import { useState } from 'react';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 import { ClipboardPenLine, DoorOpen, FilePenLine, Trash2 } from 'lucide-react';
 import Sidebar from './../../../components/Sidebar';
 import Header from './../../../components/header';
 import SearchComponent from './../../../components/searchComponent';
-import ServiceFormModal from './../../../components/AddRoomModal';
+import RoomFormModal from './../../../components/AddRoomModal'; 
 import SavingCard from './../../../components/SavingCard';
 import DeleteConfirmationCard from './../../../components/DeleteConfirmationCard';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import privateRoute from './../../../components/PrivateRoute';
 
 function Rooms() {
-  const [amenities, setAmenities] = useState([
-    { name: 'Thai Massage', amenity: 'amenity1', thirdPartyRoom: 'Yes' },
-    { name: 'Four Hand Massage', amenity: 'amenity2', },
-    { name: 'Body Massage', amenity: 'amenity3', thirdPartyRoom: 'Yes'},
-    { name: 'Hot Oil Massage', amenity: 'amenity4', },
-    { name: 'Hot Stone Massage', amenity: 'amenity5', thirdPartyRoom: 'Yes' },
-    { name: 'Relaxation Massage', amenity: 'amenity6', },
-    { name: 'Russian Massage', amenity: 'amenity7', thirdPartyRoom: 'Yes' },
-    { name: 'Arabic Massage', amenity: 'amenity8', },
-  ]);
-
+  const [rooms, setRooms] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
-  const [currentAmenity, setCurrentAmenity] = useState(null);
+  const [currentRoom, setCurrentRoom] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [amenityToDelete, setAmenityToDelete] = useState(null);
+  const [roomToDelete, setRoomToDelete] = useState(null);
 
-  // Handlers
-  const handleEdit = (index: number) => {
-    setCurrentAmenity(amenities[index]);
+
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/rooms');
+        setRooms(response.data);
+      } catch (error) {
+        console.error('Error fetching rooms:', error);
+        toast.error('Failed to fetch rooms.');
+      }
+    };
+    fetchRooms();
+  }, []);
+
+
+  const handleEdit = (index) => {
+    setCurrentRoom(rooms[index]);
     setIsEditing(true);
     setShowForm(true);
   };
 
   const handleCreate = () => {
-    setShowForm(true); // Show modal when creating a new room
+    setCurrentRoom(null);
+    setIsEditing(false);
+    setShowForm(true);
   };
 
-  const handleSave = (newRoom: any) => {
-    setIsSaving(true); // Show the saving card
+  const handleSave = async (newRoom) => {
+    setIsSaving(true);
+    try {
+      // Construct the roomData object
+      const roomData = {
+        name: newRoom.name,
+        isThirdParty: newRoom.isThirdParty ? 1 : 0,
+        amenities: Array.isArray(newRoom.amenityId) ? newRoom.amenityId : [newRoom.amenityId]
+    };
     
-    setTimeout(() => {
-      setAmenities([...amenities, newRoom]); // Add new room to the list
-      setIsSaving(false); // Hide the saving card
-      toast.success('Room created successfully!'); // Show success message
-    }, 1500); // Simulate a 1.5-second delay (can be replaced with actual API call)
+  
+      if (isEditing) {
+        // Update existing room
+        const response = await axios.put(`http://localhost:4000/rooms/${currentRoom.id}`, roomData);
+        const updatedRooms = rooms.map((room) =>
+          room._id === currentRoom._id ? response.data : room
+        );
+        setRooms(updatedRooms);
+        toast.success('Room updated successfully!');
+      } else {
+        // Create new room
+        const response = await axios.post('http://localhost:4000/rooms/create', roomData);
+        setRooms([...rooms, response.data]);
+        toast.success('Room created successfully!');
+      }
+    } catch (error) {
+      toast.error('Error saving room!');
+      console.error('Error saving room:', error);
+    } finally {
+      setIsSaving(false);
+      setShowForm(false);
+    }
   };
   
 
-  const handleDelete = (index: any) => {
-    setAmenityToDelete(index);
+  const handleDelete = (index) => {
+    setRoomToDelete(index);
     setShowDeleteConfirm(true);
   };
 
-  const confirmDelete = () => {
-    if (amenityToDelete !== null) {
-      const updatedAmenities = amenities.filter((_, i) => i !== amenityToDelete);
-      setAmenities(updatedAmenities);
-      toast.success('Room deleted successfully!');
+  const confirmDelete = async () => {
+    if (roomToDelete !== null) {
+      try {
+        const response = await axios.delete(`http://localhost:4000/rooms/${rooms[roomToDelete].id}`);
+        if (response.status === 200) {
+          const updatedRooms = rooms.filter((_, i) => i !== roomToDelete);
+          setRooms(updatedRooms);
+          toast.success('Room deleted successfully!');
+        } else {
+          toast.error('Failed to delete the room. Please try again.');
+        }
+      } catch (error) {
+        const errorMessage = error.response?.data?.message || 'Error deleting room!';
+        toast.error(errorMessage);
+        console.error('Error deleting room:', error);
+      }
     }
     setShowDeleteConfirm(false);
-    setAmenityToDelete(null);
+    setRoomToDelete(null);
   };
 
   const cancelDelete = () => {
     setShowDeleteConfirm(false);
-    setAmenityToDelete(null);
+    setRoomToDelete(null);
   };
 
   return (
@@ -82,7 +125,7 @@ function Rooms() {
           onClick={handleCreate}
           className="flex items-center bg-green-500 text-white py-2 px-4 mr-16 mt-3 rounded"
         >
-          <span className="mr-2"><DoorOpen /> </span>Rooms
+          <span className="mr-2"><ClipboardPenLine /></span>Rooms
         </button>
       </div>
 
@@ -110,36 +153,41 @@ function Rooms() {
           {/* Header */}
           <div className="flex justify-between items-center py-2 border-b mb-2 ml-20">
             <span className="text-lg font-bold text-black w-1/4">Room Name</span>
-            <span className="text-lg font-bold text-black w-1/4 ml-20">Amenities</span>
-            <span className="text-lg font-bold text-black w-1/5 ml-8">3rd Party Room</span>
-            <span className="text-lg font-bold text-black ml-96 w-1/5">Options</span>
+            <span className="text-lg font-bold text-black w-1/4 ml-10">Amenities</span>
+      
+            <span className="text-lg font-bold text-black w-1/6 mr-6">isThirdParty</span>
+            <span className="text-lg font-bold text-black ml-80 w-1/6">Options</span>
           </div>
 
-          {/* Amenities Rows */}
-          {amenities.map((amenity, index) => (
-            <div key={index} className="flex justify-between items-center py-2 border-b mb-4">
-              <span className="ml-20 text-sm text-black w-1/4">{amenity.name}</span>
-              <span className="text-sm text-black w-1/4">{amenity.amenity}</span>
-              <span className="text-sm text-black w-1/4">{amenity.thirdPartyRoom ? 'Yes' : 'No'}</span>
-              <div className="flex gap-3 w-1/5 justify-end mr-28">
-                <FilePenLine
-                  onClick={() => handleEdit(index)}
-                  className="cursor-pointer text-green-500 hover:text-pink-400"
-                />
-                <Trash2
-                  onClick={() => handleDelete(index)}
-                  className="cursor-pointer text-red-500 hover:text-red-700"
-                />
-              </div>
-            </div>
-          ))}
+          {/* Rooms Rows */}
+          {rooms.map((room, index) => (
+  <div key={index} className="flex justify-between items-center py-2 border-b mb-4">
+    <span className="ml-20 text-sm text-black w-1/4">{room.name}</span>
+    <span className="text-sm text-black w-1/4">
+      {room.amenities.map((item) => item.name).join(', ')}
+    </span>
+    <span className="text-sm text-black w-1/4">{room.isThirdParty == 1 ? 'Yes' : 'No'}</span>
+    <div className="flex gap-3 w-1/5 justify-end mr-36">
+      <FilePenLine
+        onClick={() => handleEdit(index)}
+        className="cursor-pointer text-green-500 hover:text-pink-400"
+      />
+      <Trash2
+        onClick={() => handleDelete(index)}
+        className="cursor-pointer text-red-500 hover:text-red-700"
+      />
+    </div>
+  </div>
+))}
+
         </div>
       </div>
 
       {showForm && (
-        <ServiceFormModal
+        <RoomFormModal
           onClose={() => setShowForm(false)}
           onSave={handleSave}
+          currentRoom={currentRoom} 
         />
       )}
 
@@ -155,4 +203,4 @@ function Rooms() {
   );
 }
 
-export default Rooms;
+export default privateRoute(Rooms);

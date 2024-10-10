@@ -9,10 +9,12 @@ import SavingCard from './../../../components/SavingCard';
 import DeleteConfirmationCard from './../../../components/DeleteConfirmationCard';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import privateRoute from './../../../components/PrivateRoute';
+import axios from 'axios';
 
 // Define the StaffMember interface
 interface StaffMember {
-  id: number;
+  id?: number; // Optional for new staff
   name: string;
   email: string;
   phone: string;
@@ -29,14 +31,15 @@ function Staff() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [staffToDelete, setStaffToDelete] = useState<number | null>(null);
 
-  // Sample data - replace with API call in real implementation
-  const fetchStaffMembers = () => {
-    const data: StaffMember[] = [
-      { id: 1, name: 'John Doe', email: 'john@example.com', phone: '123-456-7890', designation: 'Manager', imageUrl: '/profile.png' },
-      { id: 2, name: 'Jane Smith', email: 'jane@example.com', phone: '987-654-3210', designation: 'Therapist', imageUrl: '/Ellipse9.png' },
-      // Add more staff members here
-    ];
-    setStaffMembers(data);
+  const fetchStaffMembers = async () => {
+    try {
+      const response = await axios.get('http://localhost:4000/staff');
+      setStaffMembers(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error fetching staff members:', error);
+      toast.error('Error fetching staff members.');
+    }
   };
 
   useEffect(() => {
@@ -50,44 +53,77 @@ function Staff() {
   };
 
   const handleCreate = () => {
-    setCurrentStaff(null); // Clear current staff for new creation
+    setCurrentStaff(null); 
     setShowForm(true);
-    setIsEditing(false); // Ensure form is in "create" mode
+    setIsEditing(false);
   };
 
-  const handleSave = (newStaff: StaffMember) => {
+  const handleSave = async (newStaff: StaffMember, file?: File) => {
     setIsSaving(true);
-
-    setTimeout(() => {
-      if (isEditing && currentStaff) {
-        // Update the existing staff member
+    const formData = new FormData();
+    
+    
+    formData.append('name', newStaff.name);
+    formData.append('email', newStaff.email);
+    formData.append('phoneNumber', newStaff.phone); 
+    formData.append('designation', newStaff.designation);
+    
+    if (file) {
+      formData.append('image', file); 
+    }
+  
+    try {
+      if (isEditing && currentStaff?.id) {
+        await axios.put(`http://localhost:4000/staff/${currentStaff.id}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data', 
+          },
+        });
         setStaffMembers((prev) =>
           prev.map((staff) =>
-            staff.id === currentStaff.id ? newStaff : staff
+            staff.id === currentStaff.id ? { ...newStaff, imageUrl: currentStaff.imageUrl } : staff
           )
         );
         toast.success('Staff member updated successfully!');
       } else {
-        // Add new staff member
-        setStaffMembers((prev) => [...prev, newStaff]); // No need to assign a new ID, it's already in the form data
+       
+        const response = await axios.post('http://localhost:4000/staff/create', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+  
+        setStaffMembers((prev) => [...prev, { ...newStaff, id: response.data.id, imageUrl: response.data.imageUrl }]);
         toast.success('Staff member added successfully!');
       }
+    } catch (error) {
+      console.error('Error saving staff member:', error);
+      toast.error('Error saving staff member.');
+    } finally {
       setIsSaving(false);
       setShowForm(false);
-    }, 2000);
-};
-
-
+    }
+  };
+  
   const handleDelete = (index: number) => {
     setStaffToDelete(index);
     setShowDeleteConfirm(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (staffToDelete !== null) {
-      const updatedStaff = staffMembers.filter((_, i) => i !== staffToDelete);
-      setStaffMembers(updatedStaff);
-      toast.success('Staff member deleted successfully!');
+      const staffId = staffMembers[staffToDelete]?.id;
+      if (staffId) {
+        try {
+          await axios.delete(`http://localhost:4000/staff/${staffId}`);
+          const updatedStaff = staffMembers.filter((_, i) => i !== staffToDelete);
+          setStaffMembers(updatedStaff);
+          toast.success('Staff member deleted successfully!');
+        } catch (error) {
+          console.error('Error deleting staff member:', error);
+          toast.error('Error deleting staff member.');
+        }
+      }
     }
     setShowDeleteConfirm(false);
     setStaffToDelete(null);
@@ -138,7 +174,7 @@ function Staff() {
             <span className="text-lg font-bold text-black w-1/12">Image</span>
             <span className="text-lg font-bold text-black w-3/12">Name</span>
             <span className="text-lg font-bold text-black w-3/12">Email</span>
-            <span className="text-lg font-bold text-black w-2/12">Phone Number</span>
+            <span className="text-lg font-bold text-black w-2/12">phone Number</span>
             <span className="text-lg font-bold text-black w-2/12">Designation</span>
             <span className="text-lg font-bold text-black w-1/12">Options</span>
           </div>
@@ -151,7 +187,7 @@ function Staff() {
               </div>
               <span className="text-sm text-black w-3/12">{staff.name}</span>
               <span className="text-sm text-black w-3/12">{staff.email}</span>
-              <span className="text-sm text-black w-2/12">{staff.phone}</span>
+              <span className="text-sm text-black w-2/12">{staff.phoneNumber}</span>
               <span className="text-sm text-black w-2/12">{staff.designation}</span>
               <div className="flex gap-3 w-1/9 justify-end">
                 <FilePenLine
@@ -174,7 +210,7 @@ function Staff() {
           isOpen={showForm}
           onClose={() => setShowForm(false)}
           onSave={handleSave}
-          staffData={currentStaff} // Pre-fill form when editing
+          staffData={currentStaff} 
         />
       )}
 
@@ -182,7 +218,7 @@ function Staff() {
 
       {showDeleteConfirm && (
         <DeleteConfirmationCard
-          onDelete={confirmDelete}
+          onConfirm={confirmDelete}
           onCancel={cancelDelete}
         />
       )}
@@ -190,4 +226,4 @@ function Staff() {
   );
 }
 
-export default Staff;
+export default privateRoute(Staff);

@@ -1,5 +1,6 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import { ArrowsUpFromLine, Edit2, FilePenLine, Trash2 } from 'lucide-react';
 import Sidebar from './../../../components/Sidebar';
 import Header from './../../../components/header';
@@ -9,18 +10,32 @@ import SavingCard from './../../../components/SavingCard';
 import DeleteConfirmationCard from './../../../components/DeleteConfirmationCard';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import privateRoute from '../../../components/PrivateRoute';
 
 function Amenities() {
-  const [amenities, setAmenities] = useState(['Amenity 1', 'Amenity 2', 'Amenity 3']);
+  const [amenities, setAmenities] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
-  const [currentAmenity, setCurrentAmenity] = useState<string | null>(null);
+  const [currentAmenity, setCurrentAmenity] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [amenityToDelete, setAmenityToDelete] = useState<number | null>(null);
+  const [amenityToDelete, setAmenityToDelete] = useState(null);
+
+  // Fetch amenities when the component mounts
+  useEffect(() => {
+    const fetchAmenities = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/amenities');
+        setAmenities(response.data);
+      } catch (error) {
+        toast.error('Error fetching amenities');
+      }
+    };
+    fetchAmenities();
+  }, []);
 
   // Handlers
-  const handleEdit = (index: number) => {
+  const handleEdit = (index) => {
     setCurrentAmenity(amenities[index]);
     setIsEditing(true);
     setShowForm(true);
@@ -32,36 +47,48 @@ function Amenities() {
     setShowForm(true);
   };
 
-  const handleSave = (newAmenity: string) => {
+  const handleSave = async (newAmenity) => {
     setIsSaving(true);
     setShowForm(false);
-    setTimeout(() => {
-      if (isEditing && currentAmenity !== null) {
-        
+    try {
+      if (isEditing && currentAmenity) {
+        // Update existing amenity
+        await axios.put(`http://localhost:4000/amenities/${currentAmenity.id}`, { name: newAmenity });
         const updatedAmenities = amenities.map((amenity) =>
-          amenity === currentAmenity ? newAmenity : amenity
+          amenity.id === currentAmenity.id ? { ...amenity, name: newAmenity } : amenity
         );
         setAmenities(updatedAmenities);
-        toast.success('Amenity updated successfully!'); 
+        toast.success('Amenity updated successfully!');
       } else {
-        setAmenities([...amenities, newAmenity]);
-        toast.success('Amenity created successfully!'); // Toast for creation
+        // Create new amenity
+        const response = await axios.post('http://localhost:4000/amenities/create', { name: newAmenity });
+        setAmenities([...amenities, response.data]);
+        toast.success('Amenity created successfully!');
       }
+    } catch (error) {
+      toast.error('Error saving amenity');
+    } finally {
       setIsSaving(false);
       setShowForm(false);
-    }, 1500);
-  };
-  const handleDelete = (index: number) => {
-    setAmenityToDelete(index);
-    setShowDeleteConfirm(true);
-    
+    }
   };
 
-  const confirmDelete = () => {
+  const handleDelete = (index) => {
+    setAmenityToDelete(index);
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = async () => {
     if (amenityToDelete !== null) {
-      const updatedAmenities = amenities.filter((_, i) => i !== amenityToDelete);
-      setAmenities(updatedAmenities);
-      toast.success('Amenity deleted successfully!'); 
+      const amenityToRemove = amenities[amenityToDelete];
+      try {
+        await axios.delete(`http://localhost:4000/amenities/${amenityToRemove.id}`);
+        const updatedAmenities = amenities.filter((_, i) => i !== amenityToDelete);
+        setAmenities(updatedAmenities);
+        toast.success('Amenity deleted successfully!');
+      } catch (error) {
+        toast.error('Error deleting amenity');
+      }
     }
     setShowDeleteConfirm(false);
     setAmenityToDelete(null);
@@ -76,7 +103,6 @@ function Amenities() {
     <div>
       <Header pageName='Amenities' />
       <Sidebar />
-
       <div className="flex justify-between items-center p-4 ml-64">
         <h1 className="text-2xl font-bold ml-8">Amenities Information</h1>
         <button
@@ -108,14 +134,14 @@ function Amenities() {
         className="relative flex flex-col justify-start mb-40 rounded-lg"
       >
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold ml-20 text-black">Amenities </h2>
+          <h2 className="text-xl font-bold ml-20 text-black">Amenities</h2>
           <span className="text-lg font-bold text-black mr-20">Options</span>
         </div>
 
         <div className="flex flex-col">
           {amenities.map((amenity, index) => (
             <div key={index} className="relative flex justify-between items-center py-2">
-              <span className="ml-20 text-sm font-bold text-black">{amenity}</span>
+              <span className="ml-20 text-sm font-bold text-black">{amenity.name}</span>
               <div className="flex gap-3 mr-20">
                 <FilePenLine
                   onClick={() => handleEdit(index)}
@@ -136,6 +162,7 @@ function Amenities() {
         <AmenitiesFormCard
           onClose={() => setShowForm(false)}
           onSave={handleSave}
+          currentAmenity={currentAmenity}
         />
       )}
 
@@ -147,8 +174,10 @@ function Amenities() {
           onCancel={cancelDelete}
         />
       )}
+
+      <ToastContainer />
     </div>
   );
 }
 
-export default Amenities;
+export default privateRoute(Amenities);

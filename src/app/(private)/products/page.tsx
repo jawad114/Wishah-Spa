@@ -9,9 +9,11 @@ import SavingCard from './../../../components/SavingCard';
 import DeleteConfirmationCard from './../../../components/DeleteConfirmationCard';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import privateRoute from '../../../components/PrivateRoute';
+import axios from 'axios'; // Import Axios
 
-// Define the StaffMember interface
-interface StaffMember {
+// Define the Products interface
+interface Products {
   id: number;
   name: string;
   description: string;
@@ -20,30 +22,34 @@ interface StaffMember {
 }
 
 function Staff() {
-  const [staffMembers, setStaffMembers] = useState<StaffMember[]>([]);
+  const [Productss, setProductss] = useState<Products[]>([]);
   const [isEditing, setIsEditing] = useState(false);
-  const [currentStaff, setCurrentStaff] = useState<StaffMember | null>(null);
+  const [currentStaff, setCurrentStaff] = useState<Products | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [staffToDelete, setStaffToDelete] = useState<number | null>(null);
 
-  // Sample data - replace with API call in real implementation
-  const fetchStaffMembers = () => {
-    const data: StaffMember[] = [
-      { id: 1, name: 'John Doe', description: 'Experienced Manager', price: '$5000', imageUrl: '/product.png' },
-      { id: 2, name: 'Jane Smith', description: 'Certified Therapist', price: '$3000', imageUrl: '/product1.png' },
-      // Add more staff members here
-    ];
-    setStaffMembers(data);
+  // Fetch staff members from the backend
+  const fetchProductss = async () => {
+    try {
+      const response = await fetch('http://localhost:4000/products'); // Adjust endpoint if necessary
+      const data: Products[] = await response.json();
+      console.log(data);
+      setProductss(data);
+    } catch (error) {
+      console.error('Failed to fetch staff members:', error);
+      toast.error('Failed to fetch staff members. Please try again later.');
+    }
   };
+  
 
   useEffect(() => {
-    fetchStaffMembers();
+    fetchProductss();
   }, []);
 
   const handleEdit = (index: number) => {
-    setCurrentStaff(staffMembers[index]);
+    setCurrentStaff(Productss[index]);
     setIsEditing(true);
     setShowForm(true);
   };
@@ -54,45 +60,74 @@ function Staff() {
     setIsEditing(false); // Ensure form is in "create" mode
   };
 
-  const handleSave = (name: string, price: string, description: string, image: File | null) => {
+  const handleSave = async (name: string, price: string, description: string, image: File | null) => {
     setIsSaving(true);
-
-    // Create a new staff member object
-    const newStaff: StaffMember = {
-      id: staffMembers.length + 1, // Increment ID based on existing staff
-      name,
-      price,
-      description,
-      imageUrl: image ? URL.createObjectURL(image) : '/default-image.png', // Handle image upload
-    };
-
-    setTimeout(() => {
+    
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('price', price);
+    formData.append('description', description);
+    if (image) {
+      formData.append('image', image); // Adjust the key if your backend requires it
+    }
+  
+    try {
       if (isEditing && currentStaff) {
-        // Update the existing staff member
-        setStaffMembers((prev) =>
-          prev.map((staff) => (staff.id === currentStaff.id ? newStaff : staff))
-        );
-        toast.success('Staff member updated successfully!');
+        // Update existing staff member
+        const response = await fetch(`http://localhost:4000/products/${currentStaff.id}`, {
+          method: 'PUT',
+          body: formData,
+        });
+        if (response.ok) {
+          const updatedStaff = await response.json();
+          setProductss((prev) =>
+            prev.map((staff) => (staff.id === currentStaff.id ? updatedStaff : staff))
+          );
+          toast.success('Staff member updated successfully!');
+        } else {
+          throw new Error('Failed to update staff member.');
+        }
       } else {
-        // Add new staff member
-        setStaffMembers((prev) => [...prev, newStaff]);
-        toast.success('Staff member added successfully!');
+        // Create new staff member
+        const response = await fetch('http://localhost:4000/products/create', {
+          method: 'POST',
+          body: formData,
+        });
+        if (response.ok) {
+          const newStaff = await response.json();
+          setProductss((prev) => [...prev, newStaff]);
+          toast.success('Staff member added successfully!');
+        } else {
+          throw new Error('Failed to add staff member.');
+        }
       }
+    } catch (error) {
+      console.error('Error saving staff member:', error);
+      toast.error('Failed to save staff member. Please try again.');
+    } finally {
       setIsSaving(false);
       setShowForm(false);
-    }, 2000);
+    }
   };
+  
 
   const handleDelete = (index: number) => {
     setStaffToDelete(index);
     setShowDeleteConfirm(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (staffToDelete !== null) {
-      const updatedStaff = staffMembers.filter((_, i) => i !== staffToDelete);
-      setStaffMembers(updatedStaff);
-      toast.success('Staff member deleted successfully!');
+      const staffToRemove = Productss[staffToDelete];
+      try {
+        await axios.delete(`http://localhost:4000/products/${staffToRemove.id}`);
+        const updatedStaff = Productss.filter((_, i) => i !== staffToDelete);
+        setProductss(updatedStaff);
+        toast.success('Staff member deleted successfully!');
+      } catch (error) {
+        toast.error('Failed to delete staff member');
+        console.error(error);
+      }
     }
     setShowDeleteConfirm(false);
     setStaffToDelete(null);
@@ -148,7 +183,7 @@ function Staff() {
           </div>
 
           {/* Staff Rows */}
-          {staffMembers.map((staff, index) => (
+          {Productss.map((staff, index) => (
             <div key={staff.id} className="flex justify-between items-center py-2 border-b mb-4 ml-20">
               <div className="w-1/12">
                 <img src={staff.imageUrl} alt={staff.name} className="rounded-full w-12 h-12" />
@@ -192,4 +227,4 @@ function Staff() {
   );
 }
 
-export default Staff;
+export default privateRoute(Staff);
