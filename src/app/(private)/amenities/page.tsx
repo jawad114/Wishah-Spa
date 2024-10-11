@@ -10,7 +10,6 @@ import SavingCard from './../../../components/SavingCard';
 import DeleteConfirmationCard from './../../../components/DeleteConfirmationCard';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import privateRoute from '../../../components/PrivateRoute';
 
 type Amenity = {
   id: number; // Use the correct type based on your API response
@@ -188,4 +187,4 @@ function Amenities() {
   );
 }
 
-export default privateRoute(Amenities);
+export default Amenities;

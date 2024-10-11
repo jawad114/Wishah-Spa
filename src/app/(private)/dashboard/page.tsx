@@ -4,7 +4,7 @@ import Header from '../../../components/header';
 import Card from '../../../components/card';
 import Circle from '../../../components/circle';
 import { useState } from 'react';
-import privateRoute from './../../../components/PrivateRoute'
+
 
 const Dashboard = () => {
   const [filter, setFilter] = useState('Active');
@@ -240,4 +240,4 @@ const Dashboard = () => {
   );
 };
 
-export default privateRoute(Dashboard);
+export default Dashboard;

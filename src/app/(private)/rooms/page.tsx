@@ -10,7 +10,7 @@ import SavingCard from './../../../components/SavingCard';
 import DeleteConfirmationCard from './../../../components/DeleteConfirmationCard';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import privateRoute from './../../../components/PrivateRoute';
+
 
 // Define types for Room and component state
 // Define a unified Room interface
@@ -188,7 +188,7 @@ const Rooms: React.FC = () => {
         </div>
       </div>
 
-      {/* {showForm && (
+      {showForm && (
         <RoomFormModal
           onClose={() => setShowForm(false)}
           onSave={handleSave}
@@ -196,7 +196,7 @@ const Rooms: React.FC = () => {
           isEditing={isEditing}
            
         />
-      )} */}
+      )}
 
       {isSaving && <SavingCard />}
 
@@ -211,4 +211,4 @@ const Rooms: React.FC = () => {
   );
 }
 
-export default privateRoute(Rooms);
+export default Rooms;

@@ -10,7 +10,7 @@ import SavingCard from './../../../components/SavingCard';
 import DeleteConfirmationCard from './../../../components/DeleteConfirmationCard';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import privateRoute from '../../../components/PrivateRoute';
+
 
 // Define the structure for an amenity/service
 interface Amenity {
@@ -214,4 +214,4 @@ function OurServices() {
   );
 }
 
-export default privateRoute(OurServices);
+export default OurServices;

@@ -9,7 +9,6 @@ import SavingCard from './../../../components/SavingCard';
 import DeleteConfirmationCard from './../../../components/DeleteConfirmationCard';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import privateRoute from '../../../components/PrivateRoute';
 import axios from 'axios'; // Import Axios
 
 // Define the Products interface
@@ -228,4 +227,4 @@ function Staff() {
   );
 }
 
-export default privateRoute(Staff);
+export default Staff;
