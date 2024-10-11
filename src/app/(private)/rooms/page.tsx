@@ -36,7 +36,7 @@ const Rooms: React.FC = () => {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const response = await axios.get<Room[]>('http://localhost:4000/rooms');
+        const response = await axios.get<Room[]>('https://wishah-spa-server.onrender.com/rooms');
         setRooms(response.data);
       } catch (error) {
         console.error('Error fetching rooms:', error);
@@ -69,7 +69,7 @@ const Rooms: React.FC = () => {
   
       if (isEditing && currentRoom) {
         // Update existing room
-        const response = await axios.put<Room>(`http://localhost:4000/rooms/${currentRoom.id}`, roomData);
+        const response = await axios.put<Room>(`https://wishah-spa-server.onrender.com/rooms/${currentRoom.id}`, roomData);
         const updatedRooms = rooms.map((room) =>
           room._id === currentRoom._id ? response.data : room
         );
@@ -77,7 +77,7 @@ const Rooms: React.FC = () => {
         toast.success('Room updated successfully!');
       } else {
         // Create new room
-        const response = await axios.post<Room>('http://localhost:4000/rooms/create', roomData);
+        const response = await axios.post<Room>('https://wishah-spa-server.onrender.com/rooms/create', roomData);
         setRooms([...rooms, response.data]);
         toast.success('Room created successfully!');
       }
@@ -98,7 +98,7 @@ const Rooms: React.FC = () => {
   const confirmDelete = async () => {
     if (roomToDelete !== null) {
       try {
-        const response = await axios.delete(`http://localhost:4000/rooms/${rooms[roomToDelete].id}`);
+        const response = await axios.delete(`https://wishah-spa-server.onrender.com/rooms/${rooms[roomToDelete].id}`);
         if (response.status === 200) {
           const updatedRooms = rooms.filter((_, i) => i !== roomToDelete);
           setRooms(updatedRooms);

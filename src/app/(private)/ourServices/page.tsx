@@ -35,7 +35,7 @@ function OurServices() {
   useEffect(() => {
     const fetchAmenities = async () => {
       try {
-        const response = await axios.get<Amenity[]>('http://localhost:4000/services/');
+        const response = await axios.get<Amenity[]>('https://wishah-spa-server.onrender.com/services/');
         console.log(response.data);
         setAmenities(response.data);
       } catch (error) {
@@ -71,7 +71,7 @@ function OurServices() {
 
       if (isEditing && currentAmenity) {
         // Update existing service
-        const response = await axios.put<Amenity>(`http://localhost:4000/services/${currentAmenity._id}`, serviceData);
+        const response = await axios.put<Amenity>(`https://wishah-spa-server.onrender.com/services/${currentAmenity._id}`, serviceData);
         const updatedAmenities = amenities.map((amenity) =>
           amenity._id === currentAmenity._id ? response.data : amenity
         );
@@ -79,7 +79,7 @@ function OurServices() {
         toast.success('Service updated successfully!');
       } else {
         // Create new service
-        const response = await axios.post<Amenity>('http://localhost:4000/services/create', serviceData);
+        const response = await axios.post<Amenity>('https://wishah-spa-server.onrender.com/services/create', serviceData);
         setAmenities([...amenities, response.data]); // Add new service to the list
         toast.success('Service saved successfully!');
       }
@@ -100,7 +100,7 @@ function OurServices() {
   const confirmDelete = async () => {
     if (amenityToDelete !== null) {
       try {
-        const response = await axios.delete(`http://localhost:4000/services/${amenities[amenityToDelete]._id}`);
+        const response = await axios.delete(`https://wishah-spa-server.onrender.com/services/${amenities[amenityToDelete]._id}`);
         if (response.status === 200) {
           const updatedAmenities = amenities.filter((_, i) => i !== amenityToDelete);
           setAmenities(updatedAmenities);

@@ -29,7 +29,7 @@ const AddRoomModal: React.FC<AddRoomModalProps> = ({ onClose, onSave, currentAme
   useEffect(() => {
     const fetchAmenities = async () => {
       try {
-        const response = await fetch('http://localhost:4000/amenities/');
+        const response = await fetch('https://wishah-spa-server.onrender.com/amenities/');
         const data = await response.json();
         setAmenities(data);
       } catch (error) {

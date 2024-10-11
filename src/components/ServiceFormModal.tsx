@@ -19,7 +19,7 @@
     useEffect(() => {
       const fetchAmenities = async () => {
         try {
-          const response = await axios.get('http://localhost:4000/amenities');
+          const response = await axios.get('https://wishah-spa-server.onrender.com/amenities');
           console.log(response.data); // For debugging
           setAmenities(response.data);
         } catch (error) {

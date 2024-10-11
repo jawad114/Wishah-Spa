@@ -33,7 +33,7 @@ function Staff() {
 
   const fetchStaffMembers = async () => {
     try {
-      const response = await axios.get('http://localhost:4000/staff');
+      const response = await axios.get('https://wishah-spa-server.onrender.com/staff');
       setStaffMembers(response.data);
       console.log(response.data);
     } catch (error) {
@@ -74,7 +74,7 @@ function Staff() {
   
     try {
       if (isEditing && currentStaff?.id) {
-        await axios.put(`http://localhost:4000/staff/${currentStaff.id}`, formData, {
+        await axios.put(`https://wishah-spa-server.onrender.com/staff/${currentStaff.id}`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data', 
           },
@@ -87,7 +87,7 @@ function Staff() {
         toast.success('Staff member updated successfully!');
       } else {
        
-        const response = await axios.post('http://localhost:4000/staff/create', formData, {
+        const response = await axios.post('https://wishah-spa-server.onrender.com/staff/create', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -115,7 +115,7 @@ function Staff() {
       const staffId = staffMembers[staffToDelete]?.id;
       if (staffId) {
         try {
-          await axios.delete(`http://localhost:4000/staff/${staffId}`);
+          await axios.delete(`https://wishah-spa-server.onrender.com/staff/${staffId}`);
           const updatedStaff = staffMembers.filter((_, i) => i !== staffToDelete);
           setStaffMembers(updatedStaff);
           toast.success('Staff member deleted successfully!');

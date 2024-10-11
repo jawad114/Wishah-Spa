@@ -33,7 +33,7 @@ function Staff() {
   // Fetch staff members from the backend
   const fetchProductss = async () => {
     try {
-      const response = await fetch('http://localhost:4000/products'); // Adjust endpoint if necessary
+      const response = await fetch('https://wishah-spa-server.onrender.com/products'); // Adjust endpoint if necessary
       const data: Products[] = await response.json();
       console.log(data);
       setProductss(data);
@@ -74,7 +74,7 @@ function Staff() {
     try {
       if (isEditing && currentStaff) {
         // Update existing staff member
-        const response = await fetch(`http://localhost:4000/products/${currentStaff.id}`, {
+        const response = await fetch(`https://wishah-spa-server.onrender.com/products/${currentStaff.id}`, {
           method: 'PUT',
           body: formData,
         });
@@ -89,7 +89,7 @@ function Staff() {
         }
       } else {
         // Create new staff member
-        const response = await fetch('http://localhost:4000/products/create', {
+        const response = await fetch('https://wishah-spa-server.onrender.com/products/create', {
           method: 'POST',
           body: formData,
         });
@@ -120,7 +120,7 @@ function Staff() {
     if (staffToDelete !== null) {
       const staffToRemove = Productss[staffToDelete];
       try {
-        await axios.delete(`http://localhost:4000/products/${staffToRemove.id}`);
+        await axios.delete(`https://wishah-spa-server.onrender.com/products/${staffToRemove.id}`);
         const updatedStaff = Productss.filter((_, i) => i !== staffToDelete);
         setProductss(updatedStaff);
         toast.success('Staff member deleted successfully!');
