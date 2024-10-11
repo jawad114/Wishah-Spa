@@ -35,18 +35,13 @@ const Dashboard = () => {
 
       {/* Pink Div Container with Gradient for Opacity Effect */}
       <div
-        className="absolute bg-gradient-to-b from-pink-500 to-pink-500/70 text-white flex justify-between items-center z-0 w-full"
-        style={{
-          height: '141px',
-          top: '80px',
-          left: '207px',
-          gap: '0px',
-        }}
+        className="absolute bg-gradient-to-b from-pink-500 to-pink-500/70 text-white flex justify-between items-center z-0 w-full ml-52 top-20 h-36"
+      
       >
-        <h1 className="ml-16 font-bold mb-6 text-4xl">Welcome To Wishah SPA</h1>
+        <h1 className="ml-10 font-bold mb-6 text-4xl">Welcome To Wishah SPA</h1>
         
         {/* Button Container */}
-        <div className="flex items-center space-x-4 mr-[270px] mb-6">
+        <div className="flex items-center space-x-4  mr-[253px] mb-6">
           <button className="bg-green-500 text-white px-4 py-2 rounded">
             Add New Booking
           </button> 

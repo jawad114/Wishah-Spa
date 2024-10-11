@@ -13,12 +13,12 @@ const Header: React.FC<HeaderProps> = ({ pageName }) => {
 
       
       {/* Left side: Home | Page name */}
-      <div className=" text-pinkCustom font-bold " style={{ fontSize: '14px' }}>
+      <div className=" text-pinkCustom ml-9 font-semibold " style={{ fontFamily:'Argentum Sans', fontSize: '14px' }}>
         Home | {pageName}
       </div>
       
       {/* Right side: Search, Bell, and Profile */}
-      <div className="flex items-center space-x-5 mr-16">
+      <div className="flex items-center space-x-5 mr-10">
         {/* Search Icon */}
         <Search className="text-gray-500 cursor-pointer" />
         
