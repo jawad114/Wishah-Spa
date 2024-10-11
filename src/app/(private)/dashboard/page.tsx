@@ -22,14 +22,14 @@ const Dashboard = () => {
     { name: "Bob", service: "Nail Art", count: 200 },
     { name: "Charlie", service: "Massage", count: 50 },
     { name: "Charlie", service: "Massage", count: 50 },
-    { name: "Charlie", service: "Massage", count: 50 },
+ 
   
     // Add more services as needed
   ];
   
 
   return (
-    <div className="relative">
+    <div className="relative overflow-x-hidden  h-[1100px]">
       <Header pageName="Dashboard" />
       <Sidebar />
 
@@ -43,32 +43,32 @@ const Dashboard = () => {
           gap: '0px',
         }}
       >
-        <h1 className="ml-24 mb-6 text-4xl">Welcome To Wishah SPA</h1>
+        <h1 className="ml-16 font-bold mb-6 text-4xl">Welcome To Wishah SPA</h1>
         
         {/* Button Container */}
-        <div className="flex items-center space-x-4 mr-72 mb-6">
+        <div className="flex items-center space-x-4 mr-[270px] mb-6">
           <button className="bg-green-500 text-white px-4 py-2 rounded">
             Add New Booking
-          </button>
+          </button> 
         </div>
       </div>
 
       {/* Cards Overlaying the Pink Div */}
-      <div className="flex justify-center gap-32 mt-[100px] z-10 absolute left-[375px]">
-        <Card title="Total Services" price="100" lastMonth="Last Month" change="100" />
-        <Card title="Total Services" price="70" lastMonth="Last Month" change="70" />
+      <div className="flex justify-center gap-16 mt-[100px] z-10 absolute left-[250px]">
+        <Card title="Total Services" price="90" lastMonth="Last Month" change="90" />
+        <Card title="Total Services" price="30" lastMonth="Last Month" change="30" />
         <Card title="Total Services" price="-50" lastMonth="Last Month" change="-50" />
         <Card title="Total Services" price="50" lastMonth="Last Month" change="50" />
       </div>
 
       {/* New Card for Today’s Services Statistics */}
       <div
-        className="absolute bg-white shadow-md rounded-lg p-4"
+        className="absolute bg-white shadow-md rounded-lg mb-32 p-4"
         style={{
-          width: '820px',
+          width: '920px',
           height: '250px',
-          top: '370px',
-          left: '370px',
+          top: '350px',
+          left: '250px',
           opacity: 1,
           boxShadow: '3px 8px 10px rgba(0, 0, 0, 0.6)' 
         }}
@@ -106,8 +106,8 @@ const Dashboard = () => {
         className="absolute bg-white shadow-md p-4"
         style={{
           width: '613px', // Specific width
-          height: '260px', // Adjusted height to fit content
-          top: '360px', // Align with the same row
+          height: '250px', // Adjusted height to fit content
+          top: '350px', // Align with the same row
           left: '1230px', // Adjusted position
           borderRadius: '15px',
           opacity: 1, // Set opacity to 1 to make it visible
@@ -137,103 +137,103 @@ const Dashboard = () => {
       </div>
 
       <div
-  className="absolute bg-white shadow-md rounded-lg-4"
-  style={{
-    width: '825px',
-    height: '400px',
-    top: '660px',
-    left: '365px',
-    gap: '0px',
-    opacity: 1,
-    boxShadow: '3px 8px 10px rgba(0, 0, 0, 0.6)' 
-  }}
->
-  {/* Card Header with border line */}
-  <div className="flex justify-between items-center mb-4 mt-5 rounded-lg">
-  <h2 className="text-black text-xl font-bold ml-5">Booking Info</h2>
-  {/* Right Section for Filter Dropdown and Action Buttons */}
-  <div className="flex items-center gap-3 mr-32">
-    {/* Filter Dropdown */}
-    <select 
-      className="border border-gray-300 rounded px-2 py-2" 
-      value={filter} 
-      onChange={(e) => setFilter(e.target.value)}
-    >
-      <option value="Active">Active</option>
-      <option value="Pending">Pending</option>
-      <option value="Canceled">Canceled</option>
-    </select>
-    {/* Action Buttons */}
-    <button className="bg-green-500 text-white px-4 py-2 rounded">Today</button>
-    <button className="bg-white text-green-600 border border-green-600 px-4 py-2 rounded">Month</button>
-  </div>
-</div>
-
-
-  {/* Border line below the header */}
-  <div className="border-b border-gray-300 mb-4" />
-
-  {/* Table Header */}
-  <div className="grid grid-cols-4 font-bold text-gray-700 mb-2 gap-20">
-    <span className="mr-4 ml-6">Name</span>
-    <span className="mr-4 ml-3">Service</span>
-    <span className="mr-10">Time Slot</span>
-    <span>Status</span>
-  </div>
-
-  {/* Dynamic Data */}
-  {data.map((item, index) => (
-    <div key={index} className="grid grid-cols-4 items-center mb-2 border-b border-gray-300 pb-2 gap-16 ml-5">
-      <span className="mr-3">{item.name}</span>
-      <span className="mr-3">{item.service}</span>
-      <span className="mr-3">{item.timeSlot}</span>
-      <button 
-        className={`px-2 py-1 w-20 rounded ${
-          item.status === 'Active' ? 'bg-white border border-green-500 text-green-500' :
-          item.status === 'Pending' ? 'bg-white border border-orange-500 text-orange-500' :
-          item.status === 'Canceled' ? 'bg-white border border-red-500 text-red-500' : ''
-        }`}
-      >
-        {item.status}
-      </button>
-    </div>
-  ))}
-</div>
-
-<div
-  className="absolute bg-white shadow-md  p-4 rounded-lg"
-  style={{
-    width: '612px',
-    height: '400px',
-    top: '660px',
-    left: '1230px',
-    gap: '0px',
-    boxShadow: '3px 8px 10px rgba(0, 0, 0, 0.6)' ,
-    opacity: 1, // Adjusted opacity to 1 for visibility
-  }}
->
-  <h2 className="text-black text-xl font-bold mb-4 ml-5">Top Booking Services</h2>
-
-  {/* Dynamic Data */}
-  {topServicesData.map((item, index) => (
-    <div key={index} className="flex items-center mb-2 border-b border-gray-300 pb-2">
-      {/* Profile Circle */}
-      <div
-        className="flex items-center justify-center bg-pink-400 rounded-full w-10 h-10 text-white font-bold"
-        style={{ opacity: 0.8 }}
-      >
-        {item.service.charAt(0).toUpperCase()} {/* First capital letter */}
+    className="absolute bg-white shadow-md rounded-lg mb-12" // Increased mb-12 for more margin-bottom
+    style={{
+      width: '920px',
+      minHeight: '400px', // Increased minHeight to 400px for more height
+      top: '640px',
+      left: '250px',
+      gap: '0px',
+      opacity: 1,
+      boxShadow: '3px 8px 10px rgba(0, 0, 0, 0.6)',
+    }}
+  >
+    {/* Card Header with border line */}
+    <div className="flex justify-between items-center mb-4 mt-5 rounded-lg">
+      <h2 className="text-black text-xl font-bold ml-5">Booking Info</h2>
+      {/* Right Section for Filter Dropdown and Action Buttons */}
+      <div className="flex items-center gap-3 mr-32">
+        {/* Filter Dropdown */}
+        <select 
+          className="border border-gray-300 rounded px-2 py-2" 
+          value={filter} 
+          onChange={(e) => setFilter(e.target.value)}
+        >
+          <option value="Active">Active</option>
+          <option value="Pending">Pending</option>
+          <option value="Canceled">Canceled</option>
+        </select>
+        {/* Action Buttons */}
+        <button className="bg-green-500 text-white px-4 py-2 rounded">Today</button>
+        <button className="bg-white text-green-600 border border-green-600 px-4 py-2 rounded">Month</button>
       </div>
-      
-      <div className="ml-4 flex flex-col">
-        <span className="text-black">{item.service}</span> {/* Service Name */}
-        <span className="text-gray-500 text-sm">Our Top Service</span>
-      </div>
-
-      <span className="ml-auto text-black font-bold">{item.count}</span> {/* Count */}
     </div>
-  ))}
-</div>
+
+    {/* Border line below the header */}
+    <div className="border-b border-gray-300 mb-4" />
+
+    {/* Table Header */}
+    <div className="grid grid-cols-4 font-bold text-gray-700 mb-2 gap-20">
+      <span className="mr-4 ml-6">Name</span>
+      <span className="mr-4 ml-3">Service</span>
+      <span className="mr-10">Time Slot</span>
+      <span>Status</span>
+    </div>
+
+    {/* Dynamic Data */}
+    {data.map((item, index) => (
+      <div key={index} className="grid grid-cols-4 items-center mb-2 border-b border-gray-300 pb-2 gap-16 ml-5">
+        <span className="mr-3">{item.name}</span>
+        <span className="mr-3">{item.service}</span>
+        <span className="mr-3">{item.timeSlot}</span>
+        <button 
+          className={`px-2 py-1 w-20 rounded ${
+            item.status === 'Active' ? 'bg-white border border-green-500 text-green-500' :
+            item.status === 'Pending' ? 'bg-white border border-orange-500 text-orange-500' :
+            item.status === 'Canceled' ? 'bg-white border border-red-500 text-red-500' : ''
+          }`}
+        >
+          {item.status}
+        </button>
+      </div>
+    ))}
+  </div>
+
+  <div
+    className="absolute bg-white shadow-md p-4 rounded-lg mb-12" // Increased mb-12 for more margin-bottom
+    style={{
+      width: '612px',
+      minHeight: '400px', // Increased minHeight to 400px for more height
+      top: '640px',
+      left: '1230px',
+      gap: '0px',
+      boxShadow: '3px 8px 10px rgba(0, 0, 0, 0.6)',
+      opacity: 1,
+    }}
+  >
+    <h2 className="text-black text-xl font-bold mb-4 ml-5">Top Booking Services</h2>
+
+    {/* Dynamic Data */}
+    {topServicesData.map((item, index) => (
+      <div key={index} className="flex items-center mb-2 border-b border-gray-300 pb-2">
+        {/* Profile Circle */}
+        <div
+          className="flex items-center justify-center bg-pink-400 rounded-full w-10 h-10 text-white font-bold"
+          style={{ opacity: 0.8 }}
+        >
+          {item.service.charAt(0).toUpperCase()} {/* First capital letter */}
+        </div>
+        
+        <div className="ml-4 flex flex-col">
+          <span className="text-black">{item.service}</span> {/* Service Name */}
+          <span className="text-gray-500 text-sm">Our Top Service</span>
+        </div>
+
+        <span className="ml-auto text-black font-bold">{item.count}</span> {/* Count */}
+      </div>
+    ))}
+  </div>
+
 
 
     </div>

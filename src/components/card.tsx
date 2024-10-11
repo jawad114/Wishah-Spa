@@ -16,24 +16,24 @@ const Card = ({ title, price, change, lastMonth }: CardProps) => {
     const remainingPercentage = 100 - percentage; // Calculate remaining percentage for gray line
 
     return (
-        <div className="bg-white shadow-md overflow-hidden" style={{ width: '270px', height: '110px' ,boxShadow: '3px 8px 10px rgba(0, 0, 0, 0.6)' }}>
+        <div className="bg-white shadow-md overflow-hidden" style={{ width: '350px', height: '110px' ,boxShadow: '3px 8px 10px rgba(0, 0, 0, 0.6)' }}>
             <div className="p-2">
-                <h3 className="text-black font-bold text-sm">{title}</h3>
+                <h3 className="text-black font-bold text-sm ml-1">{title}</h3>
                 <div className="flex items-center">
-                    <span className={`text-3xl font-extrabold ${textColor}`}>$</span>
+                    <span className={`text-3xl ml-1 font-extrabold ${textColor}`}>$</span>
                     <span className={`text-3xl ml-1 font-extrabold ${textColor}`}>
                         {price}
                     </span>
                 </div>
 
                 <div className="h-1 bg-white" />
-                <div className="flex">
+                <div className="flex ml-1 ">
                     <div 
-                        className="h-1 bg-[color]" 
+                        className="h-1 rounded-lg bg-[color]" 
                         style={{ backgroundColor: color, width: `${percentage}%` }} 
                     />
                     <div 
-                        className="h-1 mr-4 bg-gray-300" // Adjust this to match your desired gray color
+                        className="h-1 mr-4 rounded-lg bg-gray-300" // Adjust this to match your desired gray color
                         style={{ width: `${remainingPercentage}%` }} 
                     />
                 </div>
