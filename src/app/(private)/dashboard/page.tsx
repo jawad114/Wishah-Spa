@@ -29,7 +29,7 @@ const Dashboard = () => {
   
 
   return (
-    <div className="relative overflow-x-hidden  h-[1100px]">
+    <div className="relative overflow-x-hidden   h-[1100px]" style={{ backgroundColor: '#EFF0F5' }}>
       <Header pageName="Dashboard" />
       <Sidebar />
 
@@ -54,7 +54,7 @@ const Dashboard = () => {
       </div>
 
       {/* Cards Overlaying the Pink Div */}
-      <div className="flex justify-center gap-16 mt-[100px] z-10 absolute left-[250px]">
+      <div className="flex justify-center gap-7 mt-[100px] z-10 absolute ml-60">
         <Card title="Total Services" price="90" lastMonth="Last Month" change="90" />
         <Card title="Total Services" price="30" lastMonth="Last Month" change="30" />
         <Card title="Total Services" price="-50" lastMonth="Last Month" change="-50" />
@@ -63,14 +63,10 @@ const Dashboard = () => {
 
       {/* New Card for Today’s Services Statistics */}
       <div
-        className="absolute bg-white shadow-md rounded-lg mb-32 p-4"
+        className="absolute bg-white shadow-md w-1/2 h-60 top-[355px] ml-60 rounded-2xl mb-32 p-4"
         style={{
-          width: '920px',
-          height: '250px',
-          top: '350px',
-          left: '250px',
           opacity: 1,
-          boxShadow: '3px 8px 10px rgba(0, 0, 0, 0.6)' 
+          boxShadow: '3px 8px 8px rgba(0, 0, 0, 0.4)',
         }}
       >
         <h2 className="text-black text-xl font-bold mb-4">Today’s Services Statistics</h2>
@@ -103,49 +99,39 @@ const Dashboard = () => {
 
       {/* New Card for Total’s Income & Other Statistics in the same row */}
       <div
-        className="absolute bg-white shadow-md p-4"
-        style={{
-          width: '613px', // Specific width
-          height: '250px', // Adjusted height to fit content
-          top: '350px', // Align with the same row
-          left: '1230px', // Adjusted position
-          borderRadius: '15px',
-          opacity: 1, // Set opacity to 1 to make it visible
-          boxShadow: '3px 8px 10px rgba(0, 0, 0, 0.6)' 
-        }}
-      >
-        <h2 className="text-black text-xl font-bold mb-4 ml-6">Total’s Income & Other Statistics</h2>
-        {/* Statistics Rows */}
-        <div className="grid grid-cols-2 mt-8 mr-56 gap-10">
-          <div className="flex flex-col items-center">
-            <p className="text-green-500 font-bold">Total Income</p>
-            <p className="text-black">$100,000</p> {/* Replace with dynamic value if needed */}
-          </div>
-          <div className="flex flex-col items-center font-bold">
-            <p className="text-green-500">Total Cash Payment</p>
-            <p className="text-black">$70,000</p> {/* Replace with dynamic value if needed */}
-          </div>
-          <div className="flex flex-col items-center font-bold">
-            <p className="text-pink-500">Total Due</p>
-            <p className="text-black">$20,000</p> {/* Replace with dynamic value if needed */}
-          </div>
-          <div className="flex flex-col items-center font-bold">
-            <p className="text-pink-500">Total Payment</p>
-            <p className="text-black">$30,000</p> {/* Replace with dynamic value if needed */}
-          </div>
-        </div>
-      </div>
+  className="absolute bg-white shadow-md p-4 w-1/3 rounded-2xl h-60 top-[355px] right-3 mr-8 "
+  style={{
+    boxShadow: '3px 8px 8px rgba(0, 0, 0, 0.4)',
+  }}
+>
+  <h2 className="text-black text-xl font-bold mb-4 ml-6">Total’s Income & Other Statistics</h2>
+  {/* Statistics Rows */}
+  <div className="grid grid-cols-2 mt-8 gap-10">
+    <div className="flex flex-col ml-7">
+      <p className="text-green-500 font-bold">Total Income</p>
+      <p className="text-black mr-4 ml-1  font-bold">$100,000</p>
+    </div>
+    <div className="flex flex-col  font-bold">
+      <p className="text-green-500 mr-16">Total Cash Payment</p>
+      <p className="text-black text-left ml-1 w-full">$70,000</p>
+    </div>
+    <div className="flex flex-col ml-7 font-bold">
+      <p className="text-pink-500 mr-4 ">Total Due</p>
+      <p className="text-black mr-4 ml-1">$20,000</p>
+    </div>
+    <div className="flex flex-col  font-bold">
+      <p className="text-pink-500 mr-7">Total Payment</p>
+      <p className="text-black text-left ml-1 w-full">$30,000</p>
+    </div>
+  </div>
+</div>
+
 
       <div
-    className="absolute bg-white shadow-md rounded-lg mb-12" // Increased mb-12 for more margin-bottom
+    className="absolute bg-white shadow-md rounded-2xl w-1/2 h-[410px] mb-12 top-[630px] ml-60" 
     style={{
-      width: '920px',
-      minHeight: '400px', // Increased minHeight to 400px for more height
-      top: '640px',
-      left: '250px',
-      gap: '0px',
-      opacity: 1,
-      boxShadow: '3px 8px 10px rgba(0, 0, 0, 0.6)',
+ 
+      boxShadow: '3px 8px 8px rgba(0, 0, 0, 0.4)',
     }}
   >
     {/* Card Header with border line */}
@@ -182,7 +168,7 @@ const Dashboard = () => {
 
     {/* Dynamic Data */}
     {data.map((item, index) => (
-      <div key={index} className="grid grid-cols-4 items-center mb-2 border-b border-gray-300 pb-2 gap-16 ml-5">
+      <div key={index} className="grid grid-cols-4 items-center mb-2 border-b border-gray-300 pb-2 gap-16 ml-5 mr-5">
         <span className="mr-3">{item.name}</span>
         <span className="mr-3">{item.service}</span>
         <span className="mr-3">{item.timeSlot}</span>
@@ -200,14 +186,10 @@ const Dashboard = () => {
   </div>
 
   <div
-    className="absolute bg-white shadow-md p-4 rounded-lg mb-12" // Increased mb-12 for more margin-bottom
+    className="absolute bg-white shadow-md p-4 rounded-2xl mb-12 w-1/3 right-3 mr-8 h-[410px] top-[630px] "
     style={{
-      width: '612px',
-      minHeight: '400px', // Increased minHeight to 400px for more height
-      top: '640px',
-      left: '1230px',
-      gap: '0px',
-      boxShadow: '3px 8px 10px rgba(0, 0, 0, 0.6)',
+    
+      boxShadow: '3px 8px 8px rgba(0, 0, 0, 0.4)',
       opacity: 1,
     }}
   >
@@ -215,7 +197,7 @@ const Dashboard = () => {
 
     {/* Dynamic Data */}
     {topServicesData.map((item, index) => (
-      <div key={index} className="flex items-center mb-2 border-b border-gray-300 pb-2">
+      <div key={index} className="flex items-center mb-2 border-b ml-6  border-gray-300 pb-2">
         {/* Profile Circle */}
         <div
           className="flex items-center justify-center bg-pink-400 rounded-full w-10 h-10 text-white font-bold"
@@ -229,7 +211,7 @@ const Dashboard = () => {
           <span className="text-gray-500 text-sm">Our Top Service</span>
         </div>
 
-        <span className="ml-auto text-black font-bold">{item.count}</span> {/* Count */}
+        <span className="ml-auto mr-4 text-black font-bold">{item.count}</span> {/* Count */}
       </div>
     ))}
   </div>
@@ -241,3 +223,5 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+

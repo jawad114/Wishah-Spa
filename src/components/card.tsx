@@ -16,7 +16,7 @@ const Card = ({ title, price, change, lastMonth }: CardProps) => {
     const remainingPercentage = 100 - percentage; // Calculate remaining percentage for gray line
 
     return (
-        <div className="bg-white shadow-md overflow-hidden" style={{ width: '350px', height: '110px' ,boxShadow: '3px 8px 10px rgba(0, 0, 0, 0.6)' }}>
+        <div className="bg-white shadow-md overflow-hidden w-96 h-28 px-1" style={{boxShadow: '3px 8px 10px rgba(0, 0, 0, 0.6)' }}>
             <div className="p-2">
                 <h3 className="text-black font-bold text-sm ml-1">{title}</h3>
                 <div className="flex items-center">
