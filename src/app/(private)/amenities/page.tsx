@@ -128,25 +128,21 @@ function Amenities() {
       <SearchComponent />
 
       <div
-        style={{
-          width: '1527px',
-          height: '550px',
-          top: '50px',
-          left: '305px',
-          boxShadow: '1px 1px 7px rgba(0, 0, 0, 0.6)',
-          padding: '20px',
-          backgroundColor: '#f9f9f9',
-        }}
-        className="relative flex flex-col justify-start mb-40 rounded-lg"
-      >
+  style={{
+    boxShadow: '1px 1px 7px rgba(0, 0, 0, 0.6)',
+    padding: '20px',
+    backgroundColor: '#f9f9f9',
+  }}
+  className="relative flex flex-col justify-start mb-40 rounded-lg ml-[250px] mr-11 w-auto max-w-full h-[560px] top-14"
+>
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold ml-20 text-black">Amenities</h2>
-          <span className="mr-20 text-black font-bold">Options</span>
+          <h2 className="text-2xl font-bold ml-20 text-black">Amenities</h2>
+          <span className="text-2xl mr-20 text-black font-bold">Options</span>
         </div>
         <div className="relative flex flex-col">
           {amenities.map((amenity: Amenity, index: number) => (
             <div key={index} className="relative flex justify-between items-center py-2">
-              <span className="ml-20 text-sm font-bold text-black">{amenity.name}</span>
+              <span className="ml-20 text-xl  text-black">{amenity.name}</span>
               <div className="flex gap-3 mr-20">
                 <FilePenLine
                   onClick={() => handleEdit(index)}

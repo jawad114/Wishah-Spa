@@ -4,7 +4,7 @@ import { ClipboardPenLine, FilePenLine, Trash2 } from 'lucide-react';
 import Sidebar from './../../../components/Sidebar';
 import Header from './../../../components/header';
 import SearchComponent from './../../../components/searchComponent';
-import ServiceFormModal from './../../../components/StaffInfoModal';
+import StaffInfoModal from './../../../components/StaffInfoModal';
 import SavingCard from './../../../components/SavingCard';
 import DeleteConfirmationCard from './../../../components/DeleteConfirmationCard';
 import { toast } from 'react-toastify';
@@ -18,7 +18,7 @@ interface StaffMember {
   email: string;
   phone: string;
   designation: string;
-  imageUrl: string;
+  imageUrl: string; // URL for staff member's image
 }
 
 function Staff() {
@@ -61,49 +61,38 @@ function Staff() {
     setIsSaving(true);
     const formData = new FormData();
     
-    
     formData.append('name', newStaff.name);
     formData.append('email', newStaff.email);
     formData.append('phoneNumber', newStaff.phone); 
     formData.append('designation', newStaff.designation);
-    
     if (file) {
-      formData.append('image', file); 
+      formData.append('image', file); // Append the file if it exists
     }
-  
+
     try {
-      if (isEditing && currentStaff?.id) {
-        await axios.put(`https://wishah-spa-server.onrender.com/staff/${currentStaff.id}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data', 
-          },
-        });
-        setStaffMembers((prev) =>
-          prev.map((staff) =>
-            staff.id === currentStaff.id ? { ...newStaff, imageUrl: currentStaff.imageUrl } : staff
-          )
+      if (isEditing && currentStaff) {
+        // Update existing staff
+        const response = await axios.put<StaffMember>(`https://wishah-spa-server.onrender.com/staff/${currentStaff.id}`, formData);
+        const updatedStaffMembers = staffMembers.map((staff) =>
+          staff.id === currentStaff.id ? response.data : staff
         );
-        toast.success('Staff member updated successfully!');
+        setStaffMembers(updatedStaffMembers);
+        toast.success('Staff updated successfully!');
       } else {
-       
-        const response = await axios.post('https://wishah-spa-server.onrender.com/staff/create', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-  
-        setStaffMembers((prev) => [...prev, { ...newStaff, id: response.data.id, imageUrl: response.data.imageUrl }]);
-        toast.success('Staff member added successfully!');
+        // Create new staff
+        const response = await axios.post<StaffMember>('https://wishah-spa-server.onrender.com/staff/create', formData);
+        setStaffMembers([...staffMembers, response.data]);
+        toast.success('Staff saved successfully!');
       }
     } catch (error) {
-      console.error('Error saving staff member:', error);
-      toast.error('Error saving staff member.');
+      toast.error('Error saving staff!');
+      console.error('Error saving staff:', error);
     } finally {
       setIsSaving(false);
       setShowForm(false);
     }
   };
-  
+
   const handleDelete = (index: number) => {
     setStaffToDelete(index);
     setShowDeleteConfirm(true);
@@ -111,17 +100,19 @@ function Staff() {
 
   const confirmDelete = async () => {
     if (staffToDelete !== null) {
-      const staffId = staffMembers[staffToDelete]?.id;
-      if (staffId) {
-        try {
-          await axios.delete(`https://wishah-spa-server.onrender.com/staff/${staffId}`);
-          const updatedStaff = staffMembers.filter((_, i) => i !== staffToDelete);
-          setStaffMembers(updatedStaff);
-          toast.success('Staff member deleted successfully!');
-        } catch (error) {
-          console.error('Error deleting staff member:', error);
-          toast.error('Error deleting staff member.');
+      try {
+        const response = await axios.delete(`https://wishah-spa-server.onrender.com/staff/${staffMembers[staffToDelete].id}`);
+        if (response.status === 200) {
+          const updatedStaffMembers = staffMembers.filter((_, i) => i !== staffToDelete);
+          setStaffMembers(updatedStaffMembers);
+          toast.success('Staff deleted successfully!');
+        } else {
+          toast.error('Failed to delete the staff. Please try again.');
         }
+      } catch (error: any) {
+        const errorMessage = error.response?.data?.message || 'Error deleting staff!';
+        toast.error(errorMessage);
+        console.error('Error deleting staff:', error);
       }
     }
     setShowDeleteConfirm(false);
@@ -134,64 +125,51 @@ function Staff() {
   };
 
   return (
-    <div>
+    <div className="min-h-screen bg-[#EFF0F5] flex flex-col">
       <Header pageName='Staff' />
       <Sidebar />
-
-      <div className="flex justify-between items-center p-4 ml-64">
+      <div className="flex justify-between items-center p-4 ml-52">
         <h1 className="text-2xl font-bold ml-8">Staff Information</h1>
         <button
           onClick={handleCreate}
-          className="flex items-center bg-green-500 text-white py-2 px-4 mr-16 mt-3 rounded"
+          className="flex items-center bg-green-500 text-white py-2 px-4 mr-7 mt-3 rounded"
         >
-          <span className="mr-2"><ClipboardPenLine /></span>Add Staff
+          <span className="mr-2"><ClipboardPenLine /></span>Staff
         </button>
       </div>
-      <div className="flex space-x-0 ml-[304px]">
-        <button className="bg-white border border-black hover:text-pink-600 text-sm py-1 px-2 rounded-l-sm">PDF</button>
-        <button className="bg-white border border-black hover:text-pink-600 text-sm py-1 px-2">Print</button>
-        <button className="bg-white border border-black hover:text-pink-600 text-sm py-1 px-2 rounded-r-md">Excel</button>
-      </div>
-
       <SearchComponent />
 
       <div
         style={{
-          width: '1527px',
-          height: '550px',
-          top: '50px',
-          left: '305px',
           boxShadow: '1px 1px 7px rgba(0, 0, 0, 0.6)',
           padding: '20px',
           backgroundColor: '#f9f9f9',
         }}
-        className="relative flex flex-col justify-start mb-40 rounded-lg"
+        className="relative flex flex-col justify-start mb-40 rounded-lg ml-[250px] mr-11 w-auto max-w-full h-[560px] top-14"
       >
         <div className="flex flex-col">
           {/* Header */}
-          <div className="flex justify-between items-center py-2 border-b mb-2 ml-20">
-            <span className="text-lg font-bold text-black w-1/12">Image</span>
-            <span className="text-lg font-bold text-black w-3/12">Name</span>
-            <span className="text-lg font-bold text-black w-3/12">Email</span>
-            <span className="text-lg font-bold text-black w-2/12">phone Number</span>
-            <span className="text-lg font-bold text-black w-2/12">Designation</span>
-            <span className="text-lg font-bold text-black w-1/12">Options</span>
+          <div className="flex justify-between items-center py-2 border-b mb-2 px-10">
+            <span className="text-2xl font-bold text-black w-[15%]">Image</span>
+            <span className="text-2xl font-bold text-black w-[20%]">Name</span>
+            <span className="text-2xl font-bold text-black w-[20%]">Email</span>
+            <span className="text-2xl font-bold text-black w-[15%]">Phone</span>
+            <span className="text-2xl font-bold text-black w-[20%]">Designation</span>
+            <span className="text-2xl font-bold text-black w-[10%] text-right">Options</span>
           </div>
 
-          {/* Staff Rows */}
+          {/* Staff Members Rows */}
           {staffMembers.map((staff, index) => (
-            <div key={staff.id} className="flex items-center py-2 border-b mb-4 ml-20">
-              <div className="w-1/12">
-                <img src={staff.imageUrl} alt={staff.name} className="rounded-full w-12 h-12" />
-              </div>
-              <span className="text-sm text-black w-3/12">{staff.name}</span>
-              <span className="text-sm text-black w-3/12">{staff.email}</span>
-              <span className="text-sm text-black w-2/12">{staff.phone}</span>
-              <span className="text-sm text-black w-2/12">{staff.designation}</span>
-              <div className="flex gap-3 w-1/9 justify-end">
+            <div key={index} className="flex justify-between items-center py-2 border-b mb-4 px-10">
+              <img src={staff.imageUrl} alt={staff.name} className="w-16 h-16 rounded-full" /> {/* Staff image */}
+              <span className="text-xl text-black w-[20%]">{staff.name}</span>
+              <span className="text-xl text-black w-[20%]">{staff.email}</span>
+              <span className="text-xl text-black w-[15%]">{staff.phone}</span>
+              <span className="text-xl text-black w-[20%]">{staff.designation}</span>
+              <div className="flex gap-3 w-[10%] justify-end">
                 <FilePenLine
                   onClick={() => handleEdit(index)}
-                  className="cursor-pointer text-green-500 hover:text-pink-400"
+                  className="cursor-pointer text-green-500 mr-2 hover:text-pink-400"
                 />
                 <Trash2
                   onClick={() => handleDelete(index)}
@@ -201,15 +179,14 @@ function Staff() {
             </div>
           ))}
         </div>
-
       </div>
 
       {showForm && (
-        <ServiceFormModal
-          isOpen={showForm}
-          onClose={() => setShowForm(false)}
-          onSave={handleSave}
-          staffData={currentStaff} 
+        <StaffInfoModal
+        isOpen={showForm}
+        onClose={() => setShowForm(false)}
+        onSave={handleSave}
+        staffData={currentStaff} 
         />
       )}
 
@@ -217,8 +194,9 @@ function Staff() {
 
       {showDeleteConfirm && (
         <DeleteConfirmationCard
-          onConfirm={confirmDelete}
+          onDelete={confirmDelete}
           onCancel={cancelDelete}
+          onConfirm={confirmDelete}
         />
       )}
     </div>

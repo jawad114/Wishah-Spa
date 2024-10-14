@@ -13,7 +13,7 @@ const Header: React.FC<HeaderProps> = ({ pageName }) => {
 
       
       {/* Left side: Home | Page name */}
-      <div className=" text-pinkCustom ml-9 font-semibold " style={{ fontFamily:'Argentum Sans', fontSize: '14px' }}>
+      <div className=" text-pinkCustom ml-9 font-semibold " style={{ fontFamily:'Argentum Sans', fontSize: '24px' }}>
         Home | {pageName}
       </div>
       

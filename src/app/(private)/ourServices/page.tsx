@@ -125,73 +125,67 @@ function OurServices() {
   };
 
   return (
+    <div className="min-h-screen bg-[#EFF0F5] flex flex-col">
     <div>
       <Header pageName='Services' />
       <Sidebar />
 
-      <div className="flex justify-between items-center p-4 ml-64">
-        <h1 className="text-2xl font-bold ml-8">Services Information</h1>
-        <button
-          onClick={handleCreate}
-          className="flex items-center bg-green-500 text-white py-2 px-4 mr-16 mt-3 rounded"
-        >
-          <span className="mr-2"><ClipboardPenLine /> </span>Services
-        </button>
-      </div>
+      <div className="flex justify-between items-center p-4 ml-52">
+  <h1 className="text-2xl font-bold ml-8">Services Information</h1>
+  <button
+    onClick={handleCreate}
+    className="flex items-center bg-green-500 text-white py-2 px-4 mr-7 mt-3 rounded"
+  >
+    <span className="mr-2"><ClipboardPenLine /> </span>Services
+  </button>
+</div>
 
-      <div className="flex space-x-0 ml-[304px]">
-        <button className="bg-white border border-black hover:text-pink-600 text-sm py-1 px-2 rounded-l-sm">PDF</button>
-        <button className="bg-white border border-black hover:text-pink-600 text-sm py-1 px-2">Print</button>
-        <button className="bg-white border border-black hover:text-pink-600 text-sm py-1 px-2 rounded-r-md">Excel</button>
-      </div>
+<SearchComponent />
 
-      <SearchComponent />
+
 
       <div
-        style={{
-          width: '1527px',
-          height: '550px',
-          top: '50px',
-          left: '305px',
-          boxShadow: '1px 1px 7px rgba(0, 0, 0, 0.6)',
-          padding: '20px',
-          backgroundColor: '#f9f9f9',
-        }}
-        className="relative flex flex-col justify-start mb-40 rounded-lg"
-      >
-        <div className="flex flex-col">
-          {/* Header */}
-          <div className="flex justify-between items-center py-2 border-b mb-2 ml-20">
-            <span className="text-lg font-bold text-black w-1/4">Service Name</span>
-            <span className="text-lg font-bold text-black w-1/4 ml-16">Amenities</span>
-            <span className="text-lg font-bold text-black w-1/4 ml-28">Service Price</span>
-            <span className="text-lg font-bold text-black w-1/4">Required Therapists</span>
-            <span className="text-lg font-bold text-black ml-80 w-1/7 mr-24">Options</span>
-          </div>
+  style={{
+    boxShadow: '1px 1px 7px rgba(0, 0, 0, 0.6)',
+    padding: '20px',
+    backgroundColor: '#f9f9f9',
+  }}
+  className="relative flex flex-col justify-start mb-40 rounded-lg ml-[250px] mr-11 w-auto max-w-full h-[560px] top-14"
+>
+  <div className="flex flex-col">
+    {/* Header */}
+    <div className="flex justify-between items-center py-2 border-b mb-2 px-10">
+      <span className="text-2xl  font-bold text-black w-[15%]">Service Name</span>
+      <span className="text-2xl font-bold text-black w-[15%]">Amenities</span>
+      <span className="text-2xl font-bold text-black w-[15%]">Service Price</span>
+      <span className="text-2xl font-bold text-black w-[20%]">Required Therapists</span>
+      <span className="text-2xl font-bold text-black w-[10%] text-right">Options</span>
+    </div>
 
-          {/* Amenities Rows */}
-          {amenities.map((amenity, index) => (
-            <div key={index} className="flex justify-between items-center py-2 border-b mb-4">
-              <span className="ml-20 text-sm text-black w-1/4">{amenity.serviceName}</span>
-              <span className="text-sm text-black w-1/4 mr-20">
-                {amenity.amenities.map((item) => item.name).join(', ')}
-              </span>
-              <span className="text-sm text-black w-1/4">{amenity.servicePrice}</span>
-              <span className="text-sm text-black w-1/4">{amenity.requiredTherapist}</span>
-              <div className="flex gap-3 w-1/5 justify-end mr-28">
-                <FilePenLine
-                  onClick={() => handleEdit(index)}
-                  className="cursor-pointer text-green-500 hover:text-pink-400"
-                />
-                <Trash2
-                  onClick={() => handleDelete(index)}
-                  className="cursor-pointer text-red-500 hover:text-red-700"
-                />
-              </div>
-            </div>
-          ))}
+    {/* Amenities Rows */}
+    {amenities.map((amenity, index) => (
+      <div key={index} className="flex justify-between items-center py-2 border-b mb-4 px-10">
+        <span className="text-xl text-black w-[15%]">{amenity.serviceName}</span>
+        <span className="text-xl text-black w-[15%]">
+          {amenity.amenities.map((item) => item.name).join(', ')}
+        </span>
+        <span className="text-xl text-black w-[15%] ml-1">{amenity.servicePrice}</span>
+        <span className="text-xl text-black ml-1 w-[20%]">{amenity.requiredTherapist}</span>
+        <div className="flex gap-3 w-[10%] justify-end">
+          <FilePenLine
+            onClick={() => handleEdit(index)}
+            className="cursor-pointer text-green-500 mr- hover:text-pink-400"
+          />
+          <Trash2
+            onClick={() => handleDelete(index)}
+            className="cursor-pointer text-red-500 hover:text-red-700"
+          />
         </div>
       </div>
+    ))}
+  </div>
+</div>
+
 
       {showForm && (
         <ServiceFormModal
@@ -210,6 +204,7 @@ function OurServices() {
           onConfirm={confirmDelete}
         />
       )}
+    </div>
     </div>
   );
 }
