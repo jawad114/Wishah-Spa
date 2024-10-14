@@ -154,12 +154,13 @@ const Rooms: React.FC = () => {
 
             {/* Rooms Rows */}
             {rooms.map((room, index) => (
+              console.log(room),
               <div key={index} className="flex justify-between items-center py-2 border-b mb-4 px-10">
                 <span className="text-xl text-black w-[15%]">{room.name}</span>
                 <span className="text-xl text-black w-[15%]">
                   {room.amenities.map((item) => item.name).join(', ')}
                 </span>
-                <span className="text-xl text-black w-[15%] ml-1">{room.isThirdParty}</span>
+                <span className="text-xl text-black w-[15%] ml-2">{room.isThirdParty? 'Yes' : 'No'}</span>
                 <div className="flex gap-3 w-[10%] justify-end">
                   <FilePenLine
                     onClick={() => handleEdit(index)}
@@ -175,13 +176,13 @@ const Rooms: React.FC = () => {
           </div>
         </div>
 
-        {/* {showForm && (
+        {showForm && (
           <RoomFormModal
             onClose={() => setShowForm(false)}
             onSave={handleSave}
             // currentRoom={currentRoom} 
           />
-        )} */}
+        )}
 
         {isSaving && <SavingCard />}
 

@@ -7,18 +7,20 @@ interface Amenity {
 }
 
 interface Room {
+  _id: string; // Include _id for MongoDB documents
+  id: string;
   name: string;
-  amenityId: number;
-  thirdPartyRoom: 'Yes' | 'No';
+  isThirdParty: number; // Change type to match the Rooms component
+  amenities: { name: string }[]; // Include amenities array
 }
 
 type AddRoomModalProps = {
   onClose: () => void;
-  onSave: (room: Room) => Promise<void>; // Update to use Room type
-  currentAmenity: Amenity | null; // Update to use Amenity type
-}
+  onSave: (room: Room) => Promise<void>; // Update to use the unified Room type
+  currentRoom: Room | null; // Use the same Room type
+};
 
-const AddRoomModal: React.FC<AddRoomModalProps> = ({ onClose, onSave, currentAmenity }) => {
+const AddRoomModal: React.FC<AddRoomModalProps> = ({ onClose, onSave, currentRoom }) => {
   const [name, setRoomName] = useState<string>('');
   const [amenities, setAmenities] = useState<Amenity[]>([]); // Type amenities as Amenity[]
   const [selectedAmenity, setSelectedAmenity] = useState<number | null>(null);
@@ -27,31 +29,33 @@ const AddRoomModal: React.FC<AddRoomModalProps> = ({ onClose, onSave, currentAme
 
   // Fetch amenities from the API
   useEffect(() => {
-    const fetchAmenities = async () => {
-      try {
-        const response = await fetch('https://wishah-spa-server.onrender.com//amenities/');
-        const data = await response.json();
-        setAmenities(data);
-      } catch (error) {
-        console.error('Error fetching amenities:', error);
-      }
-    };
+  const fetchAmenities = async () => {
+  try {
+    const response = await fetch('https://wishah-spa-server.onrender.com/amenities/');
+    const data = await response.json();
+    console.log(data); // Log the data to check its structure
+    setAmenities(data);
+  } catch (error) {
+    console.error('Error fetching amenities:', error);
+  }
+};
+
 
     fetchAmenities();
   }, []);
 
   // Populate form if current amenity is provided
   useEffect(() => {
-    if (currentAmenity) {
-      setRoomName(currentAmenity.name);
-      setSelectedAmenity(currentAmenity.id);
+    if (currentRoom) {
+      setRoomName(currentRoom.name);
+      // setSelectedAmenity(currentRoom.id);
       // setThirdPartyRoom(currentAmenity.thirdPartyRoom === 'Yes');
     } else {
       setRoomName('');
       setSelectedAmenity(null);
       setThirdPartyRoom(false);
     }
-  }, [currentAmenity]);
+  }, [currentRoom]);
 
   const handleSave = async () => { // Make this function async
     if (!name || selectedAmenity === null) {
@@ -59,14 +63,16 @@ const AddRoomModal: React.FC<AddRoomModalProps> = ({ onClose, onSave, currentAme
       return;
     }
 
-    const newRoom: Room = { // Explicitly type newRoom
-      name,
-      amenityId: selectedAmenity,
-      thirdPartyRoom: thirdPartyRoom ? 'Yes' : 'No',
-    };
+    // const newRoom: Room = { // Explicitly type newRoom
+    //   _id: '', // Include _id for MongoDB documents
+    //   id: '',
+    //   name,
+    //   amenityId: selectedAmenity,
+    //   thirdPartyRoom: thirdPartyRoom ? 'Yes' : 'No',
+    // };
 
-    await onSave(newRoom); // Await the onSave function
-    onClose();
+    // await onSave(newRoom); // Await the onSave function
+    // onClose();
   };
 
   return (

@@ -150,7 +150,7 @@ function OurServices() {
     padding: '20px',
     backgroundColor: '#f9f9f9',
   }}
-  className="relative flex flex-col justify-start mb-40 rounded-lg ml-[250px] mr-11 w-auto max-w-full h-[560px] top-14"
+  className="relative flex flex-col justify-start mb-40 rounded-lg ml-[250px] mr-12 w-auto max-w-full h-[560px] top-14"
 >
   <div className="flex flex-col">
     {/* Header */}
