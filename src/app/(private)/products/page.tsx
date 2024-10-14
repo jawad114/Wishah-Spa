@@ -143,6 +143,12 @@ function Staff() {
           </button>
         </div>
 
+        <div className="flex space-x-0 ml-[254px]">
+        <button className="bg-white border border-black hover:text-pink-600 text-sm py-1 px-2 rounded-l-sm">PDF</button>
+        <button className="bg-white border border-black hover:text-pink-600 text-sm py-1 px-2">Print</button>
+        <button className="bg-white border border-black hover:text-pink-600 text-sm py-1 px-2 rounded-r-md">Excel</button>
+      </div>
+
         <SearchComponent />
 
         <div
@@ -156,10 +162,10 @@ function Staff() {
           <div className="flex flex-col">
             {/* Header */}
             <div className="flex justify-between items-center py-2 border-b mb-2 px-10">
-            <span className="text-2xl font-bold text-black w-[15%]">Image</span>
-              <span className="text-2xl font-bold text-black w-[20%]">Product Name</span>
-              <span className="text-2xl font-bold text-black w-[30%]">Description</span>
-              <span className="text-2xl font-bold text-black w-[15%]">Price</span>
+            <span className="text-xl font-bold text-black w-[15%]">Image</span>
+              <span className="text-xl font-bold text-black w-[20%]">Product Name</span>
+              <span className="text-xl font-bold text-black w-[30%]">Description</span>
+              <span className="text-xl font-bold text-black w-[15%]">Price</span>
              
               <span className="text-2xl font-bold text-black w-[10%] text-right">Options</span>
             </div>
@@ -170,9 +176,9 @@ function Staff() {
                 <span className="text-xl text-black w-[15%]">
                   <img src={product.imageUrl} alt={product.name} className="h-12 w-12 object-cover rounded" />
                 </span>
-                <span className="text-xl text-black w-[20%]">{product.name}</span>
-                <span className="text-xl text-black w-[30%]">{product.description}</span>
-                <span className="text-xl text-black w-[15%]">{product.price}</span>
+                <span className="text-lg text-black w-[20%]">{product.name}</span>
+                <span className="text-lg text-black w-[30%]">{product.description}</span>
+                <span className="text-lg text-black w-[15%]">{product.price}</span>
                 
                 <div className="flex gap-3 w-[10%] justify-end">
                   <FilePenLine

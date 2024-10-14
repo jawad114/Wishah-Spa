@@ -49,12 +49,18 @@ const Dashboard = () => {
       </div>
 
       {/* Cards Overlaying the Pink Div */}
-      <div className="flex justify-center gap-7 mt-[100px] z-10 absolute ml-60">
-        <Card title="Total Services" price="90" lastMonth="Last Month" change="90" />
-        <Card title="Total Services" price="30" lastMonth="Last Month" change="30" />
-        <Card title="Total Services" price="-50" lastMonth="Last Month" change="-50" />
-        <Card title="Total Services" price="50" lastMonth="Last Month" change="50" />
-      </div>
+     {/* Cards Overlaying the Pink Div */}
+     <div
+  className="flex justify-between items-center mt-[100px] z-10 absolute gap-5"
+  style={{ width: 'calc(100% - 300px)', right: '50px' }} // Adjust right to better align with button
+>
+  <Card title="Total Services" price="90" lastMonth="Last Month" change="90" />
+  <Card title="Total Services" price="30" lastMonth="Last Month" change="30" />
+  <Card title="Total Services" price="-50" lastMonth="Last Month" change="-50" />
+  <Card title="Total Services" price="50" lastMonth="Last Month" change="50" />
+</div>
+
+
 
       {/* New Card for Today’s Services Statistics */}
       <div

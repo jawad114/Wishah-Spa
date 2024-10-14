@@ -109,8 +109,8 @@ function Amenities() {
     <div>
       <Header pageName='Amenities' />
       <Sidebar />
-      <div className="flex justify-between items-center p-4 ml-64">
-        <h1 className="text-2xl font-bold ml-8">Amenities Information</h1>
+      <div className="flex justify-between items-center p-4 ml-56">
+        <h1 className="text-2xl font-bold ml-3">Amenities Information</h1>
         <button
           onClick={handleCreate}
           className="flex items-center bg-green-500 text-white py-2 px-4 mr-16 mt-3 rounded"
@@ -119,7 +119,7 @@ function Amenities() {
         </button>
       </div>
 
-      <div className="flex space-x-0 ml-[304px]">
+      <div className="flex space-x-0 ml-[254px]">
         <button className="bg-white border border-black hover:text-pink-600 text-sm py-1 px-2 rounded-l-sm">PDF</button>
         <button className="bg-white border border-black hover:text-pink-600 text-sm py-1 px-2">Print</button>
         <button className="bg-white border border-black hover:text-pink-600 text-sm py-1 px-2 rounded-r-md">Excel</button>
@@ -136,13 +136,13 @@ function Amenities() {
   className="relative flex flex-col justify-start mb-40 rounded-lg ml-[250px] mr-11 w-auto max-w-full h-[560px] top-14"
 >
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold ml-20 text-black">Amenities</h2>
-          <span className="text-2xl mr-20 text-black font-bold">Options</span>
+          <h2 className="text-xl font-bold ml-20 text-black">Amenities</h2>
+          <span className="text-xl mr-20 text-black font-bold">Options</span>
         </div>
         <div className="relative flex flex-col">
           {amenities.map((amenity: Amenity, index: number) => (
             <div key={index} className="relative flex justify-between items-center py-2">
-              <span className="ml-20 text-xl  text-black">{amenity.name}</span>
+              <span className="ml-20 text-lg  text-black">{amenity.name}</span>
               <div className="flex gap-3 mr-20">
                 <FilePenLine
                   onClick={() => handleEdit(index)}

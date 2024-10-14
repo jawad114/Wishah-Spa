@@ -140,6 +140,11 @@ function Staff() {
           </button>
         </div>
 
+        <div className="flex space-x-0 ml-[254px]">
+        <button className="bg-white border border-black hover:text-pink-600 text-sm py-1 px-2 rounded-l-sm">PDF</button>
+        <button className="bg-white border border-black hover:text-pink-600 text-sm py-1 px-2">Print</button>
+        <button className="bg-white border border-black hover:text-pink-600 text-sm py-1 px-2 rounded-r-md">Excel</button>
+      </div>
         <SearchComponent />
 
         <div
@@ -153,12 +158,12 @@ function Staff() {
           <div className="flex flex-col">
             {/* Header */}
             <div className="flex justify-between items-center py-2 border-b mb-2 px-10">
-              <span className="text-2xl font-bold text-black w-[15%]">Image</span>
-              <span className="text-2xl font-bold text-black w-[20%]">Name</span>
-              <span className="text-2xl font-bold text-black w-[25%]">Email</span>
-              <span className="text-2xl font-bold text-black w-[20%]">Phone Number</span>
-              <span className="text-2xl font-bold text-black w-[20%]">Designation</span>
-              <span className="text-2xl font-bold text-black w-[10%] text-right">Options</span>
+              <span className="text-xl font-bold text-black w-[15%]">Image</span>
+              <span className="text-xl font-bold text-black w-[20%]">Name</span>
+              <span className="text-xl font-bold text-black w-[25%]">Email</span>
+              <span className="text-xl font-bold text-black w-[20%]">Phone Number</span>
+              <span className="text-xl font-bold text-black w-[20%]">Designation</span>
+              <span className="text-xl font-bold text-black w-[10%] text-right">Options</span>
             </div>
 
             {/* Staff Rows */}
@@ -167,10 +172,10 @@ function Staff() {
                 <span className="text-xl text-black w-[15%]">
                   <img src={member.imageUrl} alt={member.name} className="h-12 w-12 object-cover rounded" />
                 </span>
-                <span className="text-xl text-black w-[20%]">{member.name}</span>
-                <span className="text-xl text-black w-[25%]">{member.email}</span>
-                <span className="text-xl text-black w-[20%]">{member.phoneNumber}</span>
-                <span className="text-xl text-black w-[20%]">{member.designation}</span>
+                <span className="text-lg text-black w-[20%]">{member.name}</span>
+                <span className="text-lg text-black w-[25%]">{member.email}</span>
+                <span className="text-lg text-black w-[20%]">{member.phoneNumber}</span>
+                <span className="text-lg text-black w-[20%]">{member.designation}</span>
                 <div className="flex gap-3 w-[10%] justify-end">
                   <FilePenLine
                     onClick={() => handleEdit(index)}

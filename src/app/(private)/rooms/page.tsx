@@ -133,6 +133,11 @@ const Rooms: React.FC = () => {
           </button>
         </div>
 
+        <div className="flex space-x-0 ml-[254px]">
+        <button className="bg-white border border-black hover:text-pink-600 text-sm py-1 px-2 rounded-l-sm">PDF</button>
+        <button className="bg-white border border-black hover:text-pink-600 text-sm py-1 px-2">Print</button>
+        <button className="bg-white border border-black hover:text-pink-600 text-sm py-1 px-2 rounded-r-md">Excel</button>
+      </div>
         <SearchComponent />
 
         <div
@@ -146,21 +151,21 @@ const Rooms: React.FC = () => {
           <div className="flex flex-col">
             {/* Header */}
             <div className="flex justify-between items-center py-2 border-b mb-2 px-10">
-              <span className="text-2xl font-bold text-black w-[15%]">Room Name</span>
-              <span className="text-2xl font-bold text-black w-[15%]">Amenities</span>
-              <span className="text-2xl font-bold text-black w-[15%]">Third Party</span>
-              <span className="text-2xl font-bold text-black w-[10%] text-right">Options</span>
+              <span className="text-xl font-bold text-black w-[15%]">Room Name</span>
+              <span className="text-xl font-bold text-black w-[15%]">Amenities</span>
+              <span className="text-xl font-bold text-black w-[15%]">Third Party</span>
+              <span className="text-xl font-bold text-black w-[10%] text-right">Options</span>
             </div>
 
             {/* Rooms Rows */}
             {rooms.map((room, index) => (
               console.log(room),
               <div key={index} className="flex justify-between items-center py-2 border-b mb-4 px-10">
-                <span className="text-xl text-black w-[15%]">{room.name}</span>
-                <span className="text-xl text-black w-[15%]">
+                <span className="text-lg text-black w-[15%]">{room.name}</span>
+                <span className="text-lg text-black w-[15%]">
                   {room.amenities.map((item) => item.name).join(', ')}
                 </span>
-                <span className="text-xl text-black w-[15%] ml-2">{room.isThirdParty? 'Yes' : 'No'}</span>
+                <span className="text-lg text-black w-[15%] ml-2">{room.isThirdParty? 'Yes' : 'No'}</span>
                 <div className="flex gap-3 w-[10%] justify-end">
                   <FilePenLine
                     onClick={() => handleEdit(index)}
